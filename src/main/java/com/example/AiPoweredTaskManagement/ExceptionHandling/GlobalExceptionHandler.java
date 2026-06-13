@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<?> Usernotfound(UserNotFoundException ex) {
+	public ResponseEntity<ErrorResponse> Usernotfound(UserNotFoundException ex) {
 		ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
 		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
 	}

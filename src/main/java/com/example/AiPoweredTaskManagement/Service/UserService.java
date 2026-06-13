@@ -80,20 +80,20 @@ public class UserService {
 	}
 
 	public ResponseEntity<?> addtask(TaskDto taskdto , String token) {
-		if(token == null || !token.startsWith("Bearer ") || !jwtutil.is_expired(jwtutil.get_expiry(token))) {
+		System.out.println(taskdto);
+		System.out.println(token);
+		String token_trimmed = token.substring(7);
+		if(token == null || !token.startsWith("Bearer ") || jwtutil.is_expired(jwtutil.get_expiry(token_trimmed))) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Token");
 		}
-		String username = jwtutil.extract_useremail(token);
+		String username = jwtutil.extract_useremail(token_trimmed);
 		UserEntity user = user_repo.findByuser_email(username).orElseThrow(()-> new UserNotFoundException("User Not Found"));
 		Optional<TaskEntity> istask = task_repo.findBy_task_title(taskdto.title());
+		System.out.println(istask.isPresent());
 		if(istask.isPresent()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Task Already Exist");
 		}
-		System.out.println(taskdto.createdat());
-		System.out.println(LocalDate.parse(taskdto.createdat()));
-		System.out.println(LocalDate.parse(taskdto.dueDate()));
-		System.out.println(Priority.valueOf(taskdto.priority()));
-		 
+		
 		TaskEntity task = new TaskEntity();
 		task.setTask_title(taskdto.title());
 		task.setTask_description(taskdto.description());
@@ -101,8 +101,9 @@ public class UserService {
 		task.setTask_dueDate(LocalDate.parse(taskdto.dueDate()));
 		task.setTask_priority(Priority.valueOf(taskdto.priority()));
 		task.setTask_status(Status.valueOf(taskdto.status()));
-		
-		return null;
+		task.setUser(user);
+		task_repo.save(task);
+		return ResponseEntity.status(HttpStatus.OK).body("Task Added Successfully.");
 	}
 	
 }

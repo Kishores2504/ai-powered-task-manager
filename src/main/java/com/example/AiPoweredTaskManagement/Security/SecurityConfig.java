@@ -35,7 +35,7 @@ public class SecurityConfig {
 				.cors(cors -> {})
 				.authorizeHttpRequests(request -> {
 					request.requestMatchers("/user/register","/user/login").permitAll();
-					request.requestMatchers("/user/*").hasRole("USER");
+					request.requestMatchers("/user/*").hasRole("user");
 					request.anyRequest().authenticated();
 				})
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
