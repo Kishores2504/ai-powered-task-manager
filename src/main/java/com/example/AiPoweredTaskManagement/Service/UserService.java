@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.AiPoweredTaskManagement.DataTransferObjects.RegisterDto;
@@ -21,17 +22,20 @@ public class UserService {
 	@Autowired
 	TaskRepository task_repo;
 	
+	@Autowired
+	PasswordEncoder encoder;
+	
 	public ResponseEntity<String> register(RegisterDto registerdto) {
 		Optional<UserEntity> isuser = user_repo.findByuser_email(registerdto.email());
 		if(isuser.isEmpty()) {
 			UserEntity user = new UserEntity();
 			user.setUser_name(registerdto.name());
 			user.setUser_email(registerdto.email());
-			user.setUser_password(registerdto.password());
+			user.setUser_password(encoder.encode(registerdto.password()));
 			user_repo.save(user);
 			return ResponseEntity.status(HttpStatus.OK).body("Registered Successfully.");
 		}
 		return ResponseEntity.status(HttpStatus.FOUND).body("User Found. Please Login");	
 	}
-
+	
 }
