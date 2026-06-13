@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.AiPoweredTaskManagement.ExceptionHandling.UserNotFoundException;
 import com.example.AiPoweredTaskManagement.Repository.UserRepository;
 
 import io.jsonwebtoken.Claims;
@@ -36,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		
 		String path = request.getServletPath();
-		
+		System.out.println(path);
 		if(path.equals("/user/register") || path.equals("/user/login")) {
 			filterChain.doFilter(request, response);
 			return;
@@ -69,14 +70,25 @@ public class JwtFilter extends OncePerRequestFilter{
 			
 			username = jwtutil.extract_useremail(token);
 			
-			if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				UserDetails user = userdetails.loadUserByUsername(username);
-				if(jwtutil.is_token_valid(user, token)) {
-					UsernamePasswordAuthenticationToken userpass = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
-					userpass.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(userpass);
+			try {
+				if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+					UserDetails user = userdetails.loadUserByUsername(username);
+					if(jwtutil.is_token_valid(user, token)) {
+						UsernamePasswordAuthenticationToken userpass = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
+						userpass.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+						SecurityContextHolder.getContext().setAuthentication(userpass);
+					}
 				}
+			} catch (UserNotFoundException e) {
+				throw new UserNotFoundException("Invalid User");
 			}
+			catch(Exception e) {
+				System.out.println("jwtfilter 86" );
+				e.printStackTrace();
+			}
+		}
+		else {
+			throw new UserNotFoundException("User Exception");
 		}
 		filterChain.doFilter(request, response);
 	}
