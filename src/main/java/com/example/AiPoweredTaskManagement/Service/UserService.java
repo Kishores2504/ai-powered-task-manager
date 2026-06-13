@@ -2,6 +2,7 @@ package com.example.AiPoweredTaskManagement.Service;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ import com.example.AiPoweredTaskManagement.Entity.UserEntity;
 import com.example.AiPoweredTaskManagement.Enumurated.Priority;
 import com.example.AiPoweredTaskManagement.Enumurated.Role;
 import com.example.AiPoweredTaskManagement.Enumurated.Status;
+import com.example.AiPoweredTaskManagement.ExceptionHandling.TokenError;
 import com.example.AiPoweredTaskManagement.ExceptionHandling.UserNotFoundException;
 import com.example.AiPoweredTaskManagement.Repository.TaskRepository;
 import com.example.AiPoweredTaskManagement.Repository.UserRepository;
@@ -80,11 +82,11 @@ public class UserService {
 	}
 
 	public ResponseEntity<?> addtask(TaskDto taskdto , String token) {
-		System.out.println(taskdto);
-		System.out.println(token);
+
 		String token_trimmed = token.substring(7);
 		if(token == null || !token.startsWith("Bearer ") || jwtutil.is_expired(jwtutil.get_expiry(token_trimmed))) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Token");
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Token");
+			throw new TokenError("Invalid Credentials");
 		}
 		String username = jwtutil.extract_useremail(token_trimmed);
 		UserEntity user = user_repo.findByuser_email(username).orElseThrow(()-> new UserNotFoundException("User Not Found"));
@@ -104,6 +106,37 @@ public class UserService {
 		task.setUser(user);
 		task_repo.save(task);
 		return ResponseEntity.status(HttpStatus.OK).body("Task Added Successfully.");
+	}
+
+	public ResponseEntity<?> alltasks(String header) {
+		String token = header.substring(7).trim();
+		if(header == null || !header.startsWith("Bearer ") || jwtutil.is_expired(jwtutil.get_expiry(token))) {
+			throw new TokenError("Invalid Credentials");
+		}
+		Optional<UserEntity> isuser = user_repo.findByuser_email(jwtutil.extract_useremail(token));
+		if(isuser.isEmpty()) {
+			throw new UserNotFoundException("User Not Found");
+		}
+		UserEntity user = isuser.get();
+		
+		Optional<List<TaskEntity>> istasklist = task_repo.findBy_user_id(user.getUserid());
+		
+		if(istasklist.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Events Created");
+		}
+		else {
+			List<TaskEntity> tasklist = istasklist.get();
+			List<TaskDto> dtos = tasklist.stream().map((element)->{
+				TaskDto taskdto = new TaskDto(element.getTask_title(),
+									element.getTask_description(),
+									element.getTask_priority().toString(),
+									String.valueOf(element.getTask_createdAt()),
+									String.valueOf(element.getTask_dueDate()), 
+									element.getTask_status().toString());
+				return taskdto;
+			}).toList();
+			return ResponseEntity.status(HttpStatus.OK).body(dtos);
+		}
 	}
 	
 }

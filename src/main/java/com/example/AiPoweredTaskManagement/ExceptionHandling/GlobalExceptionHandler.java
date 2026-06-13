@@ -16,4 +16,9 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(TokenError.class)
+	public ResponseEntity<ErrorResponse> TokenError(TokenError ex) {
+		ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+	}
 }

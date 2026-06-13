@@ -2,6 +2,7 @@ package com.example.AiPoweredTaskManagement.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -36,5 +37,10 @@ public class UserController {
 	public ResponseEntity<?>add_task(@RequestBody TaskDto taskdto , @RequestHeader("Authorization")String token){
 			System.out.println("reached for add task");
 		return user_service.addtask(taskdto , token);
+	}
+	
+	@GetMapping("/alltasks")
+	public ResponseEntity<?>alltasks(@RequestHeader("Authorization")String header){
+		return user_service.alltasks(header);
 	}
 }
