@@ -73,8 +73,10 @@ public class JwtFilter extends OncePerRequestFilter{
 			
 			try {
 				if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+					System.out.println("filter 76");
 					UserDetails user = userdetails.loadUserByUsername(username);
 					if(jwtutil.is_token_valid(user, token)) {
+						System.out.println("filter 79");
 						UsernamePasswordAuthenticationToken userpass = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
 						userpass.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(userpass);

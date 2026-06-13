@@ -57,7 +57,7 @@ public class UserService {
 			user.setUser_name(registerdto.name());
 			user.setUser_email(registerdto.email());
 			user.setUser_password(encoder.encode(registerdto.password()));
-			user.setRole(Role.user);
+			user.setRole(Role.USER);
 			user_repo.save(user);
 			return ResponseEntity.status(HttpStatus.OK).body("Registered Successfully.");
 		}
@@ -119,13 +119,13 @@ public class UserService {
 		}
 		UserEntity user = isuser.get();
 		
-		Optional<List<TaskEntity>> istasklist = task_repo.findBy_user_id(user.getUserid());
+		List<TaskEntity> tasklist = task_repo.findBy_user_id(user.getUserid());
 		
-		if(istasklist.isEmpty()) {
+		if(tasklist.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Events Created");
 		}
 		else {
-			List<TaskEntity> tasklist = istasklist.get();
+			
 			List<TaskDto> dtos = tasklist.stream().map((element)->{
 				TaskDto taskdto = new TaskDto(element.getTask_title(),
 									element.getTask_description(),
@@ -137,6 +137,29 @@ public class UserService {
 			}).toList();
 			return ResponseEntity.status(HttpStatus.OK).body(dtos);
 		}
+	}
+
+	public ResponseEntity<?> deletetask(String header, int taskid) {
+		String token = header.substring(7).trim();
+		if(header == null || !header.startsWith("Bearer ") || jwtutil.is_expired(jwtutil.get_expiry(token))) {
+			throw new TokenError("Invalid Credentials");
+		}
+		Optional<UserEntity> isuser = user_repo.findByuser_email(jwtutil.extract_useremail(token));
+		if(isuser.isEmpty()) {
+			throw new UserNotFoundException("User Not Found");
+		}
+		UserEntity user = isuser.get();
+		Optional<TaskEntity> istask = task_repo.findById(taskid);
+		if(istask.isEmpty()) {
+			throw new UserNotFoundException("Task Error");
+		}
+		TaskEntity task = istask.get();
+		
+		if(!(task.getUser().getUserid() == user.getUserid())) {
+			throw new UserNotFoundException("Invalid Credentials");
+		}
+		task_repo.delete(task);
+		return ResponseEntity.status(HttpStatus.OK).body("Task Deleted Succesfully");
 	}
 	
 }

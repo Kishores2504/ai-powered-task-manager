@@ -6,6 +6,7 @@ import com.example.AiPoweredTaskManagement.Enumurated.Priority;
 import com.example.AiPoweredTaskManagement.Enumurated.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class TaskEntity {
 	private LocalDate task_dueDate;
 	private Status task_status;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 	
