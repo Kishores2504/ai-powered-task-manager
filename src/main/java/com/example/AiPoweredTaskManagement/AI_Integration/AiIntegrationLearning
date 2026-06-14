@@ -1,0 +1,7 @@
+Ai Integration works like a http request where we will  send the request 
+from our service to the gemini server to get the results.
+
+Gemini ai is used here because of it no cost for api and its specifically 
+well trained on single input and output and also google gives us a simple
+rest api as well.
+
