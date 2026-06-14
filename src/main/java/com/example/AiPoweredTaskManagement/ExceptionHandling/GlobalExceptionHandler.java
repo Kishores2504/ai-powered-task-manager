@@ -21,4 +21,9 @@ public class GlobalExceptionHandler {
 		ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
 		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(TaskError.class)
+	public ResponseEntity<ErrorResponse> TaskError(TaskError ex){
+		ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+	}
 }

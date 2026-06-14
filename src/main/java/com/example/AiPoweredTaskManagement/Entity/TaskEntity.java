@@ -2,6 +2,7 @@ package com.example.AiPoweredTaskManagement.Entity;
 
 import java.time.LocalDate;
 
+import com.example.AiPoweredTaskManagement.DataTransferObjects.TaskDto;
 import com.example.AiPoweredTaskManagement.Enumurated.Priority;
 import com.example.AiPoweredTaskManagement.Enumurated.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,14 +27,13 @@ public class TaskEntity {
 	private LocalDate task_createdAt;
 	private LocalDate task_dueDate;
 	private Status task_status;
-	
-	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY )
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 	
 	
 	public TaskEntity(int task_id, String task_title, String task_description, Priority task_priority,
-			LocalDate task_createdAt, LocalDate task_dueDate, Status task_status,UserEntity user) {
+			 LocalDate task_createdAt ,LocalDate task_dueDate, Status task_status,UserEntity user) {
 		this.task_id = task_id;
 		this.task_title = task_title;
 		this.task_description = task_description;
@@ -90,8 +90,8 @@ public class TaskEntity {
 		return task_createdAt;
 	}
 
-	public void setTask_createdAt(LocalDate task_createdAt) {
-		this.task_createdAt = task_createdAt;
+	public void setTask_createdAt() {
+		this.task_createdAt = LocalDate.now();
 	}
 
 	public LocalDate getTask_dueDate() {
@@ -108,7 +108,6 @@ public class TaskEntity {
 
 	public void setTask_status(Status task_status) {
 		this.task_status = task_status;
-	}
-	
+	} 
 	
 }

@@ -48,9 +48,8 @@ public class UserController {
 	} 
 	
 	@PatchMapping("/updatetask")
-	public ResponseEntity<?>updatetask(@RequestHeader("Authorization")String header , @RequestParam("taskid") int taskid){
-		System.out.println(taskid);
-		return null;
+	public ResponseEntity<?>updatetask(@RequestHeader("Authorization")String header , @RequestParam("taskid") int taskid , @RequestBody TaskDto taskdto){
+		return user_service.updatetask(header , taskid , taskdto);
 	}
 	
 	@DeleteMapping("/deletetask/{taskid}")

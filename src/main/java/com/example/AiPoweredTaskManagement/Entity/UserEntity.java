@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.AiPoweredTaskManagement.Enumurated.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,8 +24,8 @@ public class UserEntity {
 	private String user_email;
 	private String user_password;
 	private Role role;
-	
-	@OneToMany(mappedBy = "user")
+	// so the keyword cascade means apply parent's operation on child entities.	
+	@OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<TaskEntity> tasks;
 	
