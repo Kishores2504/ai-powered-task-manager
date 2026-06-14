@@ -18,7 +18,7 @@ public class GeminiController {
 	GeminiService geminiservice ; 
 	
 	
-	@PostMapping("/test")
+	@PostMapping("/taskSuggestion")
 	public ResponseEntity<?> getapitested(@RequestBody TaskSuggestionRequest request){
 		String response = geminiservice.testGeminiConnection(request);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
