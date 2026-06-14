@@ -3,8 +3,11 @@ import React, { useState } from "react";
 const Register = () => {
   var [newUser, set_newUser] = useState(true);
 
+  var[register_form , set_register_form] = useState({
+    
+  })
+
   return (
-    <>
       <div className="container-md " style={{ height: "100vh" }}>
         <div className="row m-0 flex-md-row justify-content-center column-gap-3 align-items-center h-100">
           <div className="col d-none d-md-block">
@@ -27,13 +30,13 @@ const Register = () => {
           <div className=" col-md-5 col-sm-12 h-75 d-flex justify-content-center">
             <form
               action="post"
-              className="bg-transparent border border-3 p-3 h-100 w-100 d-flex flex-column justify-content-around align-items-center rounded-3"
+              className="bg-transparent border border-3 p-3 h-100 w-100 d-flex flex-column justify-content-around align-items-center rounded-3 gap-3"
             >
-              <h1 className="d-md-none">Ai Powered Task Management </h1>
+              <h5 className="d-md-none text-center">Ai Powered Task Management </h5>
               {newUser ? (
                 <>
-                  <h1>Register Form</h1>
-                  <div className="d-flex justify-content-around align-items-center w-100">
+                  <h3>Register Form</h3>
+                  <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2  w-100">
                     <label
                       htmlFor="username"
                       className="fs-5 fw-semibold text-secondary"
@@ -49,7 +52,7 @@ const Register = () => {
                       style={{ outline: "none" }}
                     />
                   </div>
-                  <div className="d-flex justify-content-around w-100">
+                  <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                     <label
                       htmlFor="useremail"
                       className="fs-5 fw-semibold text-secondary"
@@ -65,7 +68,7 @@ const Register = () => {
                       style={{ outline: "none" }}
                     />
                   </div>
-                  <div className="d-flex justify-content-around w-100">
+                  <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                     <label
                       htmlFor="userpassword"
                       className="fs-5 fw-semibold text-secondary"
@@ -81,10 +84,10 @@ const Register = () => {
                       style={{ outline: "none" }}
                     />
                   </div>
-                  <div className="d-flex flex-column row-gap-2 justify-content-around align-items-center w-100">
-                    <button className="btn btn-outline-dark">Register</button>
+                  <div className="d-flex flex-column row-gap-2 justify-content-md-around align-items-center w-100">
+                    <button className="btn btn-outline-dark" onClick={(e)=>{}}>Register</button>
                     <div className="d-sm-block d-md-none d-flex column-gap-2">
-                      <p className="mb-0 mt-2">
+                      <p className="mb-0 ">
                         {newUser ? "Already Register ?" : "New User ?"}{" "}
                       </p>
                       <button
@@ -100,8 +103,8 @@ const Register = () => {
                 </>
               ) : (
                 <>
-                  <h1>Login Form</h1>
-                  <div className="d-flex justify-content-around w-100">
+                  <h3>Login Form</h3>
+                  <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                     <label
                       htmlFor="useremail"
                       className="fs-5 fw-semibold text-secondary"
@@ -117,7 +120,7 @@ const Register = () => {
                       style={{ outline: "none" }}
                     />
                   </div>
-                  <div className="d-flex justify-content-around w-100">
+                  <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                     <label
                       htmlFor="userpassword"
                       className="fs-5 fw-semibold text-secondary"
@@ -136,7 +139,7 @@ const Register = () => {
                   <div className="d-flex flex-column row-gap-2 justify-content-around align-items-center w-100">
                     <button className="btn btn-outline-dark">Login</button>
                     <div className="d-sm-block d-md-none d-flex column-gap-2 align-items-center justif-content-center">
-                      <p className="mb-0 mt-2">
+                      <p className="mb-0">
                         {newUser ? "Already Register ?" : "New User ?"}{" "}
                       </p>
                       <button
@@ -155,7 +158,6 @@ const Register = () => {
           </div>
         </div>
       </div>
-    </>
   );
 };
 
