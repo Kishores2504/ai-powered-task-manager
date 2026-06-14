@@ -1,0 +1,53 @@
+Ai Integration works like a http request where we will  send the request 
+from our service to the gemini server to get the results.
+
+Gemini ai is used here because of it no cost for api and its specifically 
+well trained on single input and output and also google gives us a simple
+rest api as well. gemini response are faster gemini flash models are optimized for 
+this.
+
+So here comes the main picture where the frontend axios will send the http
+request to the backend so now imagine we are in the backend now we want to talk
+with other resources right ? so we want a Http Client now spring boot 
+becomes backend Server + Client 
+
+ 		so here we have both Http Client provided by Spring (Not API a tool to call API)
+ 					WebClient and RestTemplate
+ 					
+WebClient -> modern faster
+			so when we mention modern and faster sprign auto suggest webclient too
+			because RestTemplate makes the request flow by (if everyone click the button at same time)
+						request made by user 1 -> loading the response
+						request made by user 2 -> wait to complete the request 1
+						.
+						.
+						request made by user 100 -> ..becomes too slow and takes more time in blocking
+			WebClient makes the request and do its other tasks and it will be get the response
+			once it is ready not wait until it is created.
+			
+SO RIGHT NOW WE KNOW WHAT ARE CLIENTS NOW WE SEE HOW WE CAN ADD THE CLIENT 
+
+ADD A DEPENDENCY IN XML WHICH IS WEBFLUX  -> WHICH CONTAIN (WEBCLIENT)
+AND RUN IT.		SO now create A CONFIGURATION FILE for bean initialization where spring 
+container creates it object and maintain it and inject when needed. 
+
+						now our app will be ready to call external APIs
+						
+so now we have the configuration of bean we needed and now create a service where we can talk to
+gemini 
+						that is GeminiService class file where it depended on 
+						webclient object and the secret key added too
+						
+now we can send and receive request and response from the gemini ai so we now have the 
+						webclient ready 
+						GeminiService ready 
+						API key for gemini
+						And have DTO's 
+						
+now we can send request but what kind of request will gemini accept or want gemini not 
+magically understand everything we give ! we want prompt engineering which it  should be formated
+		
+				so for a request and response we need {List<content> [ { List<Part> [ {text}}]]}
+				
+				so we have created gemini request which contains list<content> which contain list of part and list of part which contain text
+ 				
