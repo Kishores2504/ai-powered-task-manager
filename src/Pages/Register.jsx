@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import axios, {Axios} from 'axios';
 const Register = () => {
   var [newUser, set_newUser] = useState(true);
 
@@ -35,12 +35,56 @@ const Register = () => {
     e.preventDefault();
     if(registervalid()) return;
     else{
-      
+      let register = async ()=>{
+       try {
+         let response = await axios.post("http://localhost:8080/user/register",register_form);
+        if(response.status === 200){
+          console.log(response.data);
+          alert(response.data);
+        }
+       } catch (error) {
+        alert(error.response.data);
+       }
+      }
+      register();
     }
   }
+  var[login_error , set_login_error] = useState(null);
 
-  function loginForm(e){
+  function loginvalid(){  
+    if(login_form.email === "") {set_login_error("Field Email is Empty"); return true;} 
+
+    if(login_form.email.length < 10 || login_form.email.indexOf("@") === -1) {set_login_error("Field Email is Not Valid"); return true;}
+    
+    if(login_form.password === "") {set_login_error("Field Password is Empty"); return true;}
+
+    if(login_form.password.length < 5) {set_login_error("Password should contain more than 5 letters"); return true;}
+
+    set_login_error(null);
+    return false;
+  }
+
+  function SubmitloginForm(e){
     e.preventDefault();
+
+    if(loginvalid()) return;
+    else{
+      let loginrequest = async ()=>{
+        try {
+          let response = await axios.post("http://localhost:8080/user/login",login_form);
+          if(response.status === 200){
+            alert("Login Success");
+            console.log(response.data);
+            localStorage.setItem("ai_application_token",response.data.token);
+            localStorage.setItem("ai_application_role",response.data.role);
+          }
+        } catch (error) {
+          console.log(error.response.data);
+          alert("Login Failed");
+        }
+      }
+      loginrequest();
+    }
   }
 
   return (
@@ -138,7 +182,10 @@ const Register = () => {
                   </p>
                   <button
                     className=" align-self-start rounded-3 bg-transparent border-0"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      set_register_form({name:"",email:"",password:""})
+                      set_login_form({email:"",password:""})
                       set_newUser((prev) => !prev);
                     }}
                   >
@@ -151,12 +198,13 @@ const Register = () => {
             <form
               action="post"
               className="bg-transparent border border-3 p-3 h-100 w-100 d-flex flex-column justify-content-around align-items-center rounded-3 gap-3"
-              onSubmit={(e) => loginForm(e)}
+              onSubmit={(e) => SubmitloginForm(e)}
             >
               <h5 className="d-md-none text-center">
                 Ai Powered Task Management{" "}
               </h5>
               <h3>Login Form</h3>
+              {login_error && ( <p>{login_error}</p> )}
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                 <label
                   htmlFor="login_email"
@@ -199,7 +247,10 @@ const Register = () => {
                   </p>
                   <button
                     className=" align-self-start rounded-3 bg-transparent border-0"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault()
+                      set_register_form({name:"",email:"",password:""})
+                      set_login_form({email:"",password:""})
                       set_newUser((prev) => !prev);
                     }}
                   >
