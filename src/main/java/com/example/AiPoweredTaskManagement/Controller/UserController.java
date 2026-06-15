@@ -2,6 +2,7 @@ package com.example.AiPoweredTaskManagement.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import com.example.AiPoweredTaskManagement.Service.UserService;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 	
 	@Autowired
@@ -27,6 +29,7 @@ public class UserController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<String> user_register(@RequestBody RegisterDto registerdto){
+		System.out.println("reached");
 		return user_service.register(registerdto);
 	}
 	

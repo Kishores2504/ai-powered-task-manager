@@ -35,7 +35,11 @@ public class JwtFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
+		System.out.println(
+			    request.getMethod() +
+			    " " +
+			    request.getServletPath()
+			);
 		String path = request.getServletPath();
 		System.out.println(path);
 		if(path.equals("/user/register") || path.equals("/user/login")) {
@@ -47,8 +51,10 @@ public class JwtFilter extends OncePerRequestFilter{
 		String username = null;
 		String token = null;
 		
-		if(header != null && header.startsWith("Bearer ")) {
-			System.out.println(header);
+		if(header != null && !header.startsWith("Bearer ")) {
+		    filterChain.doFilter(request, response);
+		    return;
+			}
 			token = header.substring(7).trim();
 			
 			try {
@@ -89,10 +95,6 @@ public class JwtFilter extends OncePerRequestFilter{
 				System.out.println("jwtfilter 86" );
 				e.printStackTrace();
 			}
-		}
-		else {
-			throw new UserNotFoundException("User Exception");
-		}
 		filterChain.doFilter(request, response);
 	}
 }

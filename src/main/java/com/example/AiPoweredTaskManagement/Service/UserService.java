@@ -62,7 +62,7 @@ public class UserService {
 			user_repo.save(user);
 			return ResponseEntity.status(HttpStatus.OK).body("Registered Successfully.");
 		}
-		return ResponseEntity.status(HttpStatus.FOUND).body("User Found. Please Login");
+		return ResponseEntity.status(HttpStatus.CONFLICT).body("User Found. Please Login");
 	}
 
 	public ResponseEntity<?> login(LoginDto logindto) {
@@ -126,13 +126,14 @@ public class UserService {
 		List<TaskEntity> tasklist = task_repo.findBy_user_id(user.getUserid());
 
 		if (tasklist.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Events Created");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Task's Created");
 		} else {
 
 			List<TaskDto> dtos = tasklist.stream().map((element) -> {
 				TaskDto taskdto = new TaskDto(element.getTask_title(), element.getTask_description(),
 						element.getTask_priority().toString(), String.valueOf(element.getTask_createdAt()),
 						String.valueOf(element.getTask_dueDate()), element.getTask_status().toString());
+				System.out.println(taskdto);
 				return taskdto;
 			}).toList();
 			return ResponseEntity.status(HttpStatus.OK).body(dtos);

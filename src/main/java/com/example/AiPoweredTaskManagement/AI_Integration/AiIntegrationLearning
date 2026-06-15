@@ -50,4 +50,21 @@ magically understand everything we give ! we want prompt engineering which it  s
 				so for a request and response we need {List<content> [ { List<Part> [ {text}}]]}
 				
 				so we have created gemini request which contains list<content> which contain list of part and list of part which contain text
- 				
+
+demo json object
+
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent" \
+  -H "x-goog-api-key: $GEMINI_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "Explain how AI works in a few words"
+          }
+        ]
+      }
+    ]
+  }'

@@ -1,6 +1,7 @@
 package com.example.AiPoweredTaskManagement.AI_Integration.Dto;
 
 public record TaskSuggestionResponse(
+		String title,
 		String description,
 		String priority,
 		String estimatedTime
