@@ -9,6 +9,10 @@ function App() {
   const token = localStorage.getItem("ai_application_token");
   const role = localStorage.getItem("ai_application_role");
 
+  console.log(token);
+  console.log(role);
+  
+  
   return (
       <Routes>
          <Route path='/' element={ token ? <Navigate to={"/dashboard"} replace/> : <Register/> } />
