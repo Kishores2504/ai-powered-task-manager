@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios, {Axios} from 'axios';
+import axios, { Axios } from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -11,80 +11,118 @@ const Register = () => {
     password: "",
   });
 
-  var [login_form , set_login_form] = useState({
-    email :"",
-    password :""
-  })
-  var [error , set_error] = useState(null);
+  var [login_form, set_login_form] = useState({
+    email: "",
+    password: "",
+  });
+  var [error, set_error] = useState(null);
 
-  function registervalid(){  
+  function registervalid() {
+    if (register_form.name === "") {
+      set_error("Field Name is Empty");
+      return true;
+    }
 
-    if(register_form.name === "" ) {set_error("Field Name is Empty"); return true;}
+    if (register_form.email === "") {
+      set_error("Field Email is Empty");
+      return true;
+    }
 
-    if(register_form.email === "") {set_error("Field Email is Empty"); return true;} 
+    if (
+      register_form.email.length < 10 ||
+      register_form.email.indexOf("@") === -1
+    ) {
+      set_error("Field Email is Not Valid");
+      return true;
+    }
 
-    if(register_form.email.length < 10 || register_form.email.indexOf("@") === -1) {set_error("Field Email is Not Valid"); return true;}
-    
-    if(register_form.password === "") {set_error("Field Password is Empty"); return true;}
+    if (register_form.password === "") {
+      set_error("Field Password is Empty");
+      return true;
+    }
 
-    if(register_form.password.length < 5) {set_error("Password should contain more than 5 letters"); return true;}
+    if (register_form.password.length < 5) {
+      set_error("Password should contain more than 5 letters");
+      return true;
+    }
 
     set_error(null);
     return false;
   }
 
-  function SubmitregisterForm(e){
+  function SubmitregisterForm(e) {
     e.preventDefault();
-    if(registervalid()) return;
-    else{
-      let register = async ()=>{
-       try {
-         let response = await axios.post("http://localhost:8080/user/register",register_form);
-        if(response.status === 200){
-          console.log(response.data);
-          alert(response.data);
+    if (registervalid()) return;
+    else {
+      let register = async () => {
+        try {
+          let response = await axios.post(
+            "http://localhost:8080/user/register",
+            register_form,
+          );
+          if (response.status === 200) {
+            console.log(response.data);
+            set_error(null);
+            set_register_form({ name: "", email: "", password: "" });
+            alert(response.data);
+          }
+        } catch (error) {
+          alert(error.response.data);
         }
-       } catch (error) {
-        alert(error.response.data);
-       }
-      }
+      };
       register();
     }
   }
-  var[login_error , set_login_error] = useState(null);
+  var [login_error, set_login_error] = useState(null);
 
-  function loginvalid(){  
-    if(login_form.email === "") {set_login_error("Field Email is Empty"); return true;} 
+  function loginvalid() {
+    if (login_form.email === "") {
+      set_login_error("Field Email is Empty");
+      return true;
+    }
 
-    if(login_form.email.length < 10 || login_form.email.indexOf("@") === -1) {set_login_error("Field Email is Not Valid"); return true;}
-    
-    if(login_form.password === "") {set_login_error("Field Password is Empty"); return true;}
+    if (login_form.email.length < 10 || login_form.email.indexOf("@") === -1) {
+      set_login_error("Field Email is Not Valid");
+      return true;
+    }
 
-    if(login_form.password.length < 5) {set_login_error("Password should contain more than 5 letters"); return true;}
+    if (login_form.password === "") {
+      set_login_error("Field Password is Empty");
+      return true;
+    }
+
+    if (login_form.password.length < 5) {
+      set_login_error("Password should contain more than 5 letters");
+      return true;
+    }
 
     set_login_error(null);
     return false;
   }
 
-  
-  function SubmitloginForm(e){
+  function SubmitloginForm(e) {
     e.preventDefault();
-    if(loginvalid()) return;
-    else{
-      let loginrequest = async ()=>{
+    if (loginvalid()) return;
+    else {
+      let loginrequest = async () => {
         try {
-          let response = await axios.post("http://localhost:8080/user/login",login_form);
-          if(response.status === 200){
+          let response = await axios.post(
+            "http://localhost:8080/user/login",
+            login_form,
+          );
+          if (response.status === 200) {
             alert("Login Success");
             console.log(response.data);
-            localStorage.setItem("ai_application_token",response.data.token);
-            localStorage.setItem("ai_application_role",response.data.role);
+            localStorage.setItem("ai_application_token", response.data.token);
+            localStorage.setItem("ai_application_role", response.data.role);
+            set_login_error(null);
+            set_login_form({ email: "", password: "" });
           }
-          window.location.href="/dashboard"
+          window.location.href = "/dashboard";
         } catch (error) {
-          alert("Login Failed")
+          alert("Login Failed");
         }
-      }
+      };
       loginrequest();
     }
   }
@@ -101,7 +139,12 @@ const Register = () => {
             </h4>
             <button
               className="mt-2 align-self-start px-4 rounded-3 bg-transparent border-2"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                set_error(null);
+                set_login_error(null);
+                set_register_form({ name: "", email: "", password: "" });
+                set_login_form({ email: "", password: "" });
                 set_newUser((prev) => !prev);
               }}
             >
@@ -121,7 +164,7 @@ const Register = () => {
               </h5>
               <div>
                 <h3>Register Form</h3>
-                {error && ( <p>{error}</p> )}
+                {error && <p>{error}</p>}
               </div>
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2  w-100">
                 <label
@@ -135,7 +178,12 @@ const Register = () => {
                   id="registerusername"
                   placeholder="User Name"
                   value={register_form.name}
-                  onChange={(e)=>{set_register_form({...register_form ,name : e.target.value})}}
+                  onChange={(e) => {
+                    set_register_form({
+                      ...register_form,
+                      name: e.target.value,
+                    });
+                  }}
                   className="border-0 border-bottom border-dark"
                   style={{ outline: "none" }}
                 />
@@ -152,7 +200,12 @@ const Register = () => {
                   id="useremail"
                   placeholder="User Email"
                   value={register_form.email}
-                  onChange={(e)=>{set_register_form({...register_form ,email : e.target.value})}}
+                  onChange={(e) => {
+                    set_register_form({
+                      ...register_form,
+                      email: e.target.value,
+                    });
+                  }}
                   className="border-0 border-bottom border-dark"
                   style={{ outline: "none" }}
                 />
@@ -168,7 +221,12 @@ const Register = () => {
                   type="password"
                   id="userpassword"
                   value={register_form.password}
-                  onChange={(e)=>{set_register_form({...register_form ,password : e.target.value})}}
+                  onChange={(e) => {
+                    set_register_form({
+                      ...register_form,
+                      password: e.target.value,
+                    });
+                  }}
                   placeholder="User Password"
                   className="border-0 border-bottom border-dark"
                   style={{ outline: "none" }}
@@ -188,8 +246,8 @@ const Register = () => {
                       e.preventDefault();
                       set_error(null);
                       set_login_error(null);
-                      set_register_form({name:"",email:"",password:""})
-                      set_login_form({email:"",password:""})
+                      set_register_form({ name: "", email: "", password: "" });
+                      set_login_form({ email: "", password: "" });
                       set_newUser((prev) => !prev);
                     }}
                   >
@@ -208,7 +266,7 @@ const Register = () => {
                 Ai Powered Task Management{" "}
               </h5>
               <h3>Login Form</h3>
-              {login_error && ( <p>{login_error}</p> )}
+              {login_error && <p>{login_error}</p>}
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                 <label
                   htmlFor="login_email"
@@ -221,7 +279,9 @@ const Register = () => {
                   id="login_email"
                   placeholder="User Email"
                   value={login_form.email}
-                  onChange={(e)=>{set_login_form({...login_form , email : e.target.value})}}
+                  onChange={(e) => {
+                    set_login_form({ ...login_form, email: e.target.value });
+                  }}
                   className="border-0 border-bottom border-dark"
                   style={{ outline: "none" }}
                 />
@@ -239,7 +299,9 @@ const Register = () => {
                   placeholder="User Password"
                   className="border-0 border-bottom border-dark"
                   value={login_form.password}
-                  onChange={(e)=>{set_login_form({...login_form , password : e.target.value})}}
+                  onChange={(e) => {
+                    set_login_form({ ...login_form, password: e.target.value });
+                  }}
                   style={{ outline: "none" }}
                 />
               </div>
@@ -255,8 +317,8 @@ const Register = () => {
                       e.preventDefault();
                       set_error(null);
                       set_login_error(null);
-                      set_register_form({name:"",email:"",password:""})
-                      set_login_form({email:"",password:""})
+                      set_register_form({ name: "", email: "", password: "" });
+                      set_login_form({ email: "", password: "" });
                       set_newUser((prev) => !prev);
                     }}
                   >
