@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios, {Axios} from 'axios';
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
   var [newUser, set_newUser] = useState(true);
-
+  var navigate = useNavigate();
   var [register_form, set_register_form] = useState({
     name: "",
     email: "",
@@ -64,9 +66,9 @@ const Register = () => {
     return false;
   }
 
+  
   function SubmitloginForm(e){
     e.preventDefault();
-
     if(loginvalid()) return;
     else{
       let loginrequest = async ()=>{
@@ -78,9 +80,9 @@ const Register = () => {
             localStorage.setItem("ai_application_token",response.data.token);
             localStorage.setItem("ai_application_role",response.data.role);
           }
+          window.location.href="/dashboard"
         } catch (error) {
-          console.log(error.response.data);
-          alert("Login Failed");
+          alert("Login Failed")
         }
       }
       loginrequest();
@@ -184,6 +186,8 @@ const Register = () => {
                     className=" align-self-start rounded-3 bg-transparent border-0"
                     onClick={(e) => {
                       e.preventDefault();
+                      set_error(null);
+                      set_login_error(null);
                       set_register_form({name:"",email:"",password:""})
                       set_login_form({email:"",password:""})
                       set_newUser((prev) => !prev);
@@ -248,7 +252,9 @@ const Register = () => {
                   <button
                     className=" align-self-start rounded-3 bg-transparent border-0"
                     onClick={(e) => {
-                      e.preventDefault()
+                      e.preventDefault();
+                      set_error(null);
+                      set_login_error(null);
                       set_register_form({name:"",email:"",password:""})
                       set_login_form({email:"",password:""})
                       set_newUser((prev) => !prev);
