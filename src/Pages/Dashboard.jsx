@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styles from "./Dashboard.module.css";
-
+import api from "./api";
 const Dashboard = () => {
   const usertoken = localStorage.getItem("ai_application_token");
 
@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const task_fetcher = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/user/alltasks", {
+      const response = await api.get("/user/alltasks", {
         headers: {
           Authorization: `Bearer ${usertoken}`,
           "Content-Type": "application/json",
@@ -53,8 +53,8 @@ const Dashboard = () => {
     }
     try {
       setloading(true);
-      let response = await axios.post(
-        "http://localhost:8080/ai/taskSuggestion",
+      let response = await api.post(
+        "/ai/taskSuggestion",
         { title: suggestion.title },
         {
           headers: {
@@ -92,24 +92,24 @@ const Dashboard = () => {
 
   var [addtask_error, set_addtask_error] = useState("");
 
-  function add_task_validation() {
-    if (addTaskObject.title === "") {
+  function add_task_validation(obj) {
+    if (obj.title === "") {
       set_addtask_error("Field Title is Empty");
       return true;
     }
-    if (addTaskObject.description === "") {
+    if (obj.description === "") {
       set_addtask_error("Field Description is Empty");
       return true;
     }
-    if (addTaskObject.priority === "" || addTaskObject.priority === "Default") {
+    if (obj.priority === "" || obj.priority === "Default") {
       set_addtask_error("Set Priority");
       return true;
     }
-    if (addTaskObject.status === "" || addTaskObject.status === "Default") {
+    if (obj.status === "" || obj.status === "Default") {
       set_addtask_error("Set Status");
       return true;
     }
-    if (addTaskObject.dueDate === "" || addTaskObject.dueDate <= Date.now()) {
+    if (obj.dueDate === "" || new Date(obj.dueDate) <= Date.now()) {
       set_addtask_error("Set a Due Date");
       return true;
     }
@@ -118,10 +118,10 @@ const Dashboard = () => {
   }
   var addtaskformSubmission = async (e) => {
     e.preventDefault();
-    if (add_task_validation()) return;
+    if (add_task_validation(addTaskObject)) return;
     try {
-      let response = await axios.post(
-        "http://localhost:8080/user/addtask",
+      let response = await api.post(
+        "/user/addtask",
         addTaskObject,
         {
           headers: {
@@ -136,7 +136,7 @@ const Dashboard = () => {
         alert("Task Added successfully");
       }
     } catch (error) {
-      console.log(error);
+      alert(error.response.data);
     } finally {
       set_addTaskObject({
         title: "",
@@ -150,14 +150,13 @@ const Dashboard = () => {
   };
 
   var deleteTaskById = async(taskid) => {
-    let response = await axios.delete(`http://localhost:8080/user/deletetask/${taskid}`,{
+      try {
+    let response = await api.delete(`/user/deletetask/${taskid}`,{
       headers:{
         authorization : `Bearer ${usertoken}`,
         'Content-Type' : 'Application/json'
       }
     })
-
-    try {
       if(response.status === 200){
         console.log(response.data);
         task_fetcher();
@@ -206,7 +205,7 @@ const Dashboard = () => {
     try {
       console.log(task_update_form);
       console.log("entered try");
-    let response = await axios.patch(`http://localhost:8080/user/updatetask?taskid=${update_taskid}`,task_update_form,{
+    let response = await api.patch(`/user/updatetask?taskid=${update_taskid}`,task_update_form,{
       headers:{
         authorization : `Bearer ${usertoken}`,
         'Content-Type' : 'Application/json'
@@ -339,6 +338,20 @@ const Dashboard = () => {
                       <p>Estimated Time :</p>
                       <p>{suggestion.estimatedTime}</p>
                     </div>
+                  </div>
+                </div>
+                <div className="row ">
+                  <div className="col">
+                    <button className="btn btn-outline-dark" onClick={(e)=>{
+                      e.preventDefault();
+                      set_view_addtaskform(true);
+                      set_addTaskObject({
+                        ...addTaskObject,
+                        title: suggestion.title,
+                        description : suggestion.description,
+                        priority : suggestion.priority
+                      })
+                    }}>Add this to Task</button>
                   </div>
                 </div>
               </div>

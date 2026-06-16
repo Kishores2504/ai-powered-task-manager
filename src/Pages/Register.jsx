@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios, { Axios } from "axios";
 import { useNavigate } from "react-router-dom";
-
+import api from "./api";
 const Register = () => {
   var [newUser, set_newUser] = useState(true);
   var navigate = useNavigate();
@@ -56,8 +56,8 @@ const Register = () => {
     else {
       let register = async () => {
         try {
-          let response = await axios.post(
-            "http://localhost:8080/user/register",
+          let response = await api.post(
+            "/user/register",
             register_form,
           );
           if (response.status === 200) {
@@ -106,8 +106,8 @@ const Register = () => {
     else {
       let loginrequest = async () => {
         try {
-          let response = await axios.post(
-            "http://localhost:8080/user/login",
+          let response = await api.post(
+            "/user/login",
             login_form,
           );
           if (response.status === 200) {
