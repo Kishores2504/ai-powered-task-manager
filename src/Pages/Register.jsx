@@ -120,7 +120,7 @@ const Register = () => {
           }
           window.location.href = "/dashboard";
         } catch (error) {
-          alert("Login Failed");
+          alert(error.response.data.message);
         }
       };
       loginrequest();

@@ -79,10 +79,59 @@ const Dashboard = () => {
       setloading(false);
     }
   };
+  
+  var [view_addtaskform , set_view_addtaskform] = useState(false);
+  var [addTaskObject , set_addTaskObject] = useState({
+    title : "",
+    description : "",
+    priority : "",
+    dueDate:"",
+    status :""
+  })
+
+  var [addtask_error , set_addtask_error] = useState("");
+
+  function add_task_validation(){
+    if(addTaskObject.title === "") {set_addtask_error("Field Title is Empty"); return true;}
+    if(addTaskObject.description === "") {set_addtask_error("Field Description is Empty"); return true;}
+    if(addTaskObject.priority === "" || addTaskObject.priority === "Default") {set_addtask_error("Set Priority"); return true;}
+    if(addTaskObject.status === "" || addTaskObject.status === "Default") {set_addtask_error("Set Status"); return true;}
+    if(addTaskObject.dueDate === "" || addTaskObject.dueDate <= Date.now()) {set_addtask_error("Set a Due Date"); return true;}
+    set_addtask_error("");
+    return false;
+  }
+  var addtaskformSubmission = async(e) => {
+    e.preventDefault();
+    if(add_task_validation()) return;
+    try {
+        let response = await axios.post("http://localhost:8080/user/addtask",addTaskObject,{
+      headers :{ 
+        authorization : `Bearer ${usertoken}`,
+      'Content-type' : "Application/json"}
+    })
+    if(response.status === 200){
+      console.log(response.data);
+      task_fetcher();
+      alert("Task Added successfully");
+    }
+    } catch (error) {
+     console.log(error);
+    }
+    finally{
+      set_addTaskObject({
+        title:"",
+        description:"",
+        createdat : String(Date.now()),
+        dueDate:"",
+        priority:"",
+        status:""
+      })
+    }
+  }
 
   useEffect(() => {
     task_fetcher();
-  }, [usertoken]);
+  }, []);
   return (
     <div className="container-fluid py-4">
       <div className="row  align-items-center border-bottom pb-3 ">
@@ -199,42 +248,76 @@ const Dashboard = () => {
         <div className="col">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 className="fw-bold">Tasks Created</h2>
-            <button className="btn btn-dark">+ New Task</button>
+            <button className="btn btn-dark" onClick={()=> set_view_addtaskform(!view_addtaskform)}>{view_addtaskform ? "X" : "+ New Task"}</button>
           </div>
-            <div className=" row p-4 m-0 border border-dark rounded-3 mb-3">  
-              <form action=""  className={ `${styles.addTaskform} col d-flex flex-column flex-md-row gap-2 justify-content-around`}>
+          {
+            view_addtaskform && (
+              <div className="row p-4 m-0 border border-dark rounded-3 mb-3">  
+              {addtask_error && (
+                <p className="text-danger fw-semibold">{addtask_error}</p>
+              )}
+              <form onSubmit={(e) => addtaskformSubmission(e)}  className={ `${styles.addTaskform} col d-flex flex-column flex-md-row gap-2 justify-content-around`}>
                 <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="">Title</label>
-                  <input type="text" name="" id="" placeholder="Task Title"/>
+                  <label htmlFor="add_task_title">Title</label>
+                  <input type="text" name="" id="add_task_title" placeholder="Task Title" value={addTaskObject.title} onChange={(e) =>set_addTaskObject({
+                    ...addTaskObject ,
+                    title : e.target.value
+                  })}/>
                 </div>
                 <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="">Description</label>
-                  <textarea name="" id="" style={{resize:"none" , minHeight:"50px"}} placeholder="Task Description"></textarea>
+                  <label htmlFor="add_task_description">Description</label>
+                  <textarea name="" id="add_task_description" style={{ minHeight:"50px",maxHeight:"80px",scrollbarWidth:"none"}} placeholder="Task Description"
+                    value={addTaskObject.description} onChange={(e)=>{
+                      set_addTaskObject({
+                        ...addTaskObject,
+                        description : e.target.value
+                      })
+                    }}
+                  ></textarea>
                 </div>
                 <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="">Priority</label>
-                  <select name="" id="">
-                    <option value="" defaultChecked>Low</option>
-                    <option value="">High</option>
+                  <label htmlFor="add_task_priority">Priority</label>
+                  <select name="" id="add_task_priority" value={addTaskObject.priority} onChange={(e)=>{
+                    set_addTaskObject({
+                      ...addTaskObject,
+                      priority : e.target.value
+                    })
+                  }}>
+                    <option value="Default" defaultChecked>Select Priority</option>
+                    <option value="LOW" >Low</option>
+                    <option value="HIGH">High</option>
                   </select>
                 </div>
                 <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="">Status</label>
-                  <select name="" id="">
-                    <option value="" defaultChecked>Todo</option>
-                    <option value="">In Process</option>
-                    <option value="">Done</option>
+                  <label htmlFor="add_task_status">Status</label>
+                  <select name="" id="add_task_status" value={addTaskObject.status} onChange={(e)=>{
+                    set_addTaskObject({
+                      ...addTaskObject,
+                      status: e.target.value
+                    })
+                  }}>
+                    <option value="Default" defaultChecked>Select Status</option>
+                    <option value="TODO">Todo</option>
+                    <option value="IN_PROGRESS">In Process</option>
+                    <option value="DONE">Done</option>
                   </select>
                 </div>
                 <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="">Due Date</label>
-                 <input type="date" name="" id="" />
+                  <label htmlFor="add_task_duedate">Due Date</label>
+                 <input type="date" name="" id="add_task_duedate" value={addTaskObject.dueDate} onChange={(e)=>{
+                  set_addTaskObject({
+                    ...addTaskObject,
+                    dueDate : e.target.value
+                  })
+                 }}/>
                 </div>
                 <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <button className="btn btn-outline-dark">Add Task</button>
+                  <button className="btn btn-outline-dark" type="submit">Add Task</button>
                 </div>
               </form>
               </div>
+            )
+          }
           {task.length > 0 ? (
             <div className="table-responsive">
               <table className=" table table-bordered border-dark text-center align-middle">
