@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.LoginDto;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.RegisterDto;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.TaskDto;
+import com.example.AiPoweredTaskManagement.DataTransferObjects.addTaskDto;
 import com.example.AiPoweredTaskManagement.Service.UserService;
 
 @RestController
@@ -40,8 +41,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/addtask")
-	public ResponseEntity<?>add_task(@RequestBody TaskDto taskdto , @RequestHeader("Authorization")String token){
+	public ResponseEntity<?>add_task(@RequestBody addTaskDto taskdto , @RequestHeader("Authorization")String token){
 			System.out.println("reached for add task");
+			System.out.println(taskdto);
 		return user_service.addtask(taskdto , token);
 	}
 	
@@ -51,7 +53,8 @@ public class UserController {
 	} 
 	
 	@PatchMapping("/updatetask")
-	public ResponseEntity<?>updatetask(@RequestHeader("Authorization")String header , @RequestParam("taskid") int taskid , @RequestBody TaskDto taskdto){
+	public ResponseEntity<?>updatetask(@RequestHeader("Authorization")String header , @RequestParam("taskid") int taskid , @RequestBody addTaskDto taskdto){
+		System.out.println(taskdto);
 		return user_service.updatetask(header , taskid , taskdto);
 	}
 	

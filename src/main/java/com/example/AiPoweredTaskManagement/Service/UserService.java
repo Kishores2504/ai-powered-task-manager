@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.LoginDto;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.RegisterDto;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.TaskDto;
+import com.example.AiPoweredTaskManagement.DataTransferObjects.addTaskDto;
 import com.example.AiPoweredTaskManagement.Entity.TaskEntity;
 import com.example.AiPoweredTaskManagement.Entity.UserEntity;
 import com.example.AiPoweredTaskManagement.Enumurated.Priority;
@@ -81,7 +82,7 @@ public class UserService {
 		return ResponseEntity.status(HttpStatus.OK).body(Map.of("token", token, "role", role));
 	}
 
-	public ResponseEntity<?> addtask(TaskDto taskdto, String token) {
+	public ResponseEntity<?> addtask(addTaskDto taskdto, String token) {
 
 		String token_trimmed = token.substring(7);
 		if (token == null || !token.startsWith("Bearer ") || jwtutil.is_expired(jwtutil.get_expiry(token_trimmed))) {
@@ -130,7 +131,7 @@ public class UserService {
 		} else {
 
 			List<TaskDto> dtos = tasklist.stream().map((element) -> {
-				TaskDto taskdto = new TaskDto(element.getTask_title(), element.getTask_description(),
+				TaskDto taskdto = new TaskDto(element.getTask_id(),element.getTask_title(), element.getTask_description(),
 						element.getTask_priority().toString(), String.valueOf(element.getTask_createdAt()),
 						String.valueOf(element.getTask_dueDate()), element.getTask_status().toString());
 				System.out.println(taskdto);
@@ -163,7 +164,7 @@ public class UserService {
 		return ResponseEntity.status(HttpStatus.OK).body("Task Deleted Succesfully");
 	}
 
-	public ResponseEntity<?> updatetask(String header, int taskid, TaskDto taskdto) {
+	public ResponseEntity<?> updatetask(String header, int taskid, addTaskDto taskdto) {
 		String token = header.substring(7).trim();
 		if (header == null || !header.startsWith("Bearer ") || jwtutil.is_expired(jwtutil.get_expiry(token))) {
 			throw new TokenError("Invalid Credentials");
@@ -190,7 +191,7 @@ public class UserService {
 		task.setTask_status(taskdto.status() == null || taskdto.status().equals("") ? task.getTask_status()
 				: Status.valueOf(taskdto.status()));
 		task_repo.save(task);
-		return ResponseEntity.status(HttpStatus.OK).body(task);
+		return ResponseEntity.status(HttpStatus.OK).body("Task Updated Successfully");
 	}
 
 }
