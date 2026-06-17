@@ -1,7 +1,6 @@
 package com.example.AiPoweredTaskManagement.DataTransferObjects;
 
-public record TaskDto(
-		int taskid,
+public record addTaskDto(
 		String title ,
 		String description,
 		String priority ,

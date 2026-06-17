@@ -2,6 +2,7 @@ package com.example.AiPoweredTaskManagement.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.LoginDto;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.RegisterDto;
 import com.example.AiPoweredTaskManagement.DataTransferObjects.TaskDto;
+import com.example.AiPoweredTaskManagement.DataTransferObjects.addTaskDto;
 import com.example.AiPoweredTaskManagement.Service.UserService;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 	
 	@Autowired
@@ -27,6 +30,7 @@ public class UserController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<String> user_register(@RequestBody RegisterDto registerdto){
+		System.out.println("reached");
 		return user_service.register(registerdto);
 	}
 	
@@ -37,8 +41,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/addtask")
-	public ResponseEntity<?>add_task(@RequestBody TaskDto taskdto , @RequestHeader("Authorization")String token){
+	public ResponseEntity<?>add_task(@RequestBody addTaskDto taskdto , @RequestHeader("Authorization")String token){
 			System.out.println("reached for add task");
+			System.out.println(taskdto);
 		return user_service.addtask(taskdto , token);
 	}
 	
@@ -48,7 +53,8 @@ public class UserController {
 	} 
 	
 	@PatchMapping("/updatetask")
-	public ResponseEntity<?>updatetask(@RequestHeader("Authorization")String header , @RequestParam("taskid") int taskid , @RequestBody TaskDto taskdto){
+	public ResponseEntity<?>updatetask(@RequestHeader("Authorization")String header , @RequestParam("taskid") int taskid , @RequestBody addTaskDto taskdto){
+		System.out.println(taskdto);
 		return user_service.updatetask(header , taskid , taskdto);
 	}
 	

@@ -11,7 +11,6 @@ import com.example.AiPoweredTaskManagement.AI_Integration.Dto.GeminiRequest;
 import com.example.AiPoweredTaskManagement.AI_Integration.Dto.Part;
 import com.example.AiPoweredTaskManagement.AI_Integration.Dto.TaskSuggestionRequest;
 
-import jakarta.annotation.PostConstruct;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -43,6 +42,7 @@ public class GeminiService {
 
 				Required format:
 				{
+					"Title" : "",
 					"description" : "",
 					"priority" : "",
 					"estimatedTime" :""
@@ -52,7 +52,7 @@ public class GeminiService {
 				        1. Priority must be LOW, or HIGH.
 				        2. Estimated time must be realistic.
 				        3. Do not return explanations.
-				        4. Return ONLY valid JSON. No markdown, no code block, no explanation.
+				        4. Return ONLY valid JSON, No markdown, no code block, no explanation.
 				""".formatted(request.title());
 	}
 	
@@ -78,13 +78,24 @@ public class GeminiService {
 	
 	public String testGeminiConnection(TaskSuggestionRequest request) {
 		GeminiRequest requests = createGeminirequest(request);
-		String rawresponse = webclient.post()
-				.uri(apiUrl + "?key=" + apiKey)
-				.bodyValue(requests)
-				.retrieve()
-				.bodyToMono(String.class)
-				.block();
-		return extractTaskSuggestion(rawresponse);	
+		try {
+			String rawresponse = webclient.post()
+					.uri(apiUrl + "?key=" + apiKey)
+					.bodyValue(requests)
+					.retrieve()
+					.bodyToMono(String.class)
+					.block();
+			return extractTaskSuggestion(rawresponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return """
+					{
+					"description" : "Gemini Unavailable",
+					"priority" : "LOW",
+					"estimatedTime" : "Unknown"
+					}
+					""";
+		}
 	}
 	private String extractTaskSuggestion(String geminiresponse) {
 		try {
@@ -98,8 +109,10 @@ public class GeminiService {
 								 .path("parts") // get parts array
 								 .path(0) 	// get first part 
 								 .path("text") // get text inside the part
-								 .asText();	// convert to java string
-			
+								 .asText();	// convert to java string	
+			textcontent = textcontent.replace("``json", "")
+									 .replace("``", "").trim();
+			System.out.println(textcontent);
 			JsonNode sugesstionjson = mapper.readTree(textcontent); // again coverting it to json because we converted
 			// it to string and now we again convert it to json 
 			return mapper.writeValueAsString(sugesstionjson); // convert the json into

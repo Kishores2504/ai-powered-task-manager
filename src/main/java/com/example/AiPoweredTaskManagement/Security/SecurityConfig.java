@@ -29,7 +29,7 @@ public class SecurityConfig {
 	
 	
 	@Bean
-	public SecurityFilterChain secruityfilter(HttpSecurity httpsecurity) {
+	public SecurityFilterChain secruityfilter(HttpSecurity httpsecurity) throws Exception{
 		return httpsecurity
 				.csrf(csrf -> csrf.disable())
 				.formLogin(form -> form.disable())
@@ -44,17 +44,17 @@ public class SecurityConfig {
 				.build();
 	}
 	
-//	@Bean
-//	public CorsConfigurationSource corsconfig() {
-//		CorsConfiguration config = new CorsConfiguration();
-//		config.setAllowedOrigins(List.of("http://localhost:5173"));
-//		config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
-//		config.setAllowedHeaders(List.of("*"));
-//		config.setAllowCredentials(true);
-//		UrlBasedCorsConfigurationSource urlconfig = new UrlBasedCorsConfigurationSource();
-//		urlconfig.registerCorsConfiguration("/**", config);
-//		return urlconfig;
-//	}
+	@Bean
+	public CorsConfigurationSource corsconfig() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(List.of("http://localhost:5173"));
+		config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setAllowCredentials(true);
+		UrlBasedCorsConfigurationSource urlconfig = new UrlBasedCorsConfigurationSource();
+		urlconfig.registerCorsConfiguration("/**", config);
+		return urlconfig;
+	}
 	
 	@Bean 
 	public PasswordEncoder passwordencoder() {
