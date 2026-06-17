@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+=======
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
@@ -36,3 +62,4 @@ target/
 *.iml
 src/main/resources/application.properties
 .env
+>>>>>>> 99699ceeef6023aadb720e620d32f754f05ee106
