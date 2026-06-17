@@ -60,5 +60,6 @@ build/
 target/
 .idea/
 *.iml
+src/main/resources/application.properties
 .env
 >>>>>>> 99699ceeef6023aadb720e620d32f754f05ee106
