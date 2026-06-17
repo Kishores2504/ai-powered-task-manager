@@ -47,7 +47,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsconfig() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:5173","http://ai-powered-task-manager-production.up.railway.app"));
+		config.setAllowedOrigins(List.of("http://localhost:5173","https://ai-powered-task-manager-production.up.railway.app"));
 		config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
