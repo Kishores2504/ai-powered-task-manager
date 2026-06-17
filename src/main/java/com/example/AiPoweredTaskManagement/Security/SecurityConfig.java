@@ -33,7 +33,7 @@ public class SecurityConfig {
 		return httpsecurity
 				.csrf(csrf -> csrf.disable())
 				.formLogin(form -> form.disable())
-				.cors(cors -> {})
+				.cors(cors -> cors.configurationSource(corsconfig()))
 				.authorizeHttpRequests(request -> {
 					request.requestMatchers("/user/register","/user/login").permitAll();
 					request.requestMatchers("/user/*").hasRole("USER");
