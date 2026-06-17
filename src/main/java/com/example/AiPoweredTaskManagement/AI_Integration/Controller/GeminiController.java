@@ -14,7 +14,7 @@ import com.example.AiPoweredTaskManagement.AI_Integration.Service.GeminiService;
 
 @RestController
 @RequestMapping("/ai")
-@CrossOrigin(originPatterns = "http://localhost:5173")
+//@CrossOrigin(originPatterns = "http://localhost:5173")
 public class GeminiController {
 	@Autowired
 	GeminiService geminiservice ; 

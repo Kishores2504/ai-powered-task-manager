@@ -22,7 +22,7 @@ import com.example.AiPoweredTaskManagement.Service.UserService;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 	
 	@Autowired
