@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL : "http://localhost:8080"   
+    baseURL : "https://ai-powered-task-manager-production.up.railway.app"   
 })
 
 // the use method takes two parameters -> which is success handler , error handler
