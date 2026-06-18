@@ -188,19 +188,17 @@ POST /user/register
 
 POST /user/login
 
-### Tasks
+GET /user/alltasks
 
-GET /task/all
+POST /user/addtask
 
-POST /task/create
+PATCH /user/updatetask/{id}
 
-PUT /task/update/{id}
-
-DELETE /task/delete/{id}
+DELETE /user/deletetask/{id}
 
 ### AI Suggestions
 
-POST /ai/suggestion
+POST /ai/taskSuggestion
 
 ---
 
