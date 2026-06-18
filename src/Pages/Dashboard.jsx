@@ -241,7 +241,7 @@ const Dashboard = () => {
       <div className="row  align-items-center p-4 rounded-4 shadow-sm bg-white mb-4 ">
         <div className="col">
           <>
-            <h2 className="fw-bold mb-1">👋 Welcome Back</h2>
+            <h2 className="fw-bold mb-1">Welcome Back</h2>
 
             <p className="text-muted mb-0">
               Manage your tasks intelligently with AI
