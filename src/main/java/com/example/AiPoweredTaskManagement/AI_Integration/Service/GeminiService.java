@@ -18,10 +18,10 @@ import tools.jackson.databind.ObjectMapper;
 public class GeminiService {
 	private final WebClient webclient;
 	
-	@Value("${my.gemini.key}")
+	@Value("${MY_GEMINI_KEY}")
 	private String apiKey;
 	
-	@Value("${gemini.url}")
+	@Value("${GEMINI_URL}")
 	private String apiUrl;
 
 	public GeminiService(WebClient client) {
