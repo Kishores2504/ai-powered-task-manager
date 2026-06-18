@@ -56,10 +56,7 @@ const Register = () => {
     else {
       let register = async () => {
         try {
-          let response = await api.post(
-            "/user/register",
-            register_form,
-          );
+          let response = await api.post("/user/register", register_form);
           if (response.status === 200) {
             console.log(response.data);
             set_error(null);
@@ -106,10 +103,7 @@ const Register = () => {
     else {
       let loginrequest = async () => {
         try {
-          let response = await api.post(
-            "/user/login",
-            login_form,
-          );
+          let response = await api.post("/user/login", login_form);
           if (response.status === 200) {
             alert("Login Success");
             console.log(response.data);
@@ -128,17 +122,32 @@ const Register = () => {
   }
 
   return (
-    <div className="container-md " style={{ height: "100vh" }}>
-      <div className="row m-0 flex-md-row justify-content-center column-gap-3 align-items-center h-100">
-        <div className="col d-none d-md-block">
-          <h4 className="mb-2">Welcome to,</h4>
-          <h1 className="display-1 fw-bold">Ai Powered Task Management</h1>
+    <div
+      className="container-fluid "
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg , #6366F1 ,#8B5CF6)",
+      }}
+    >
+      <div className="row m-0 justify-content-center align-items-center h-100">
+        <div className="col-lg-6 d-none d-md-block">
+          <h4 className="text-white">Welcome to</h4>
+          <h1 className="display-3 fw-bold text-white">
+            Ai Powered <br /> Task Management
+          </h1>
+          <p className="text-white fs-5 mt-3">
+            Organize Tasks.
+            <br />
+            Prioritize Work.
+            <br />
+            Let AI Assist You.
+          </p>
           <div className="mt-3 d-flex flex-column ">
             <h4 className=" text-secondary-emphasis">
               {newUser ? "Already Register ?" : "New User ?"}
             </h4>
             <button
-              className="mt-2 align-self-start px-4 rounded-3 bg-transparent border-2"
+              className="btn btn-light mt-3 px-4"
               onClick={(e) => {
                 e.preventDefault();
                 set_error(null);
@@ -152,19 +161,23 @@ const Register = () => {
             </button>
           </div>
         </div>
-        <div className=" col-md-5 col-sm-12 h-75 d-flex justify-content-center">
+        <div className="col-lg-4 col-md-6 col-sm-12">
           {newUser ? (
             <form
               action="post"
-              className="bg-transparent border border-3 p-3 h-100 w-100 d-flex flex-column justify-content-around align-items-center rounded-3 gap-3"
+              className="bg-white shadow-lg border-0 p-4 w-100 rounded-4 d-flex flex-column gap-4"
               onSubmit={(e) => SubmitregisterForm(e)}
             >
               <h5 className="d-md-none text-center">
                 Ai Powered Task Management{" "}
               </h5>
               <div>
-                <h3>Register Form</h3>
-                {error && <p>{error}</p>}
+                <h3 className="fw-bold text-center text-primary">
+                  Create Account
+                </h3>
+                {error && (
+                  <div className="alert alert-danger py-2">{error}</div>
+                )}
               </div>
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2  w-100">
                 <label
@@ -184,8 +197,7 @@ const Register = () => {
                       name: e.target.value,
                     });
                   }}
-                  className="border-0 border-bottom border-dark"
-                  style={{ outline: "none" }}
+                  className="form-control"
                 />
               </div>
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
@@ -206,8 +218,7 @@ const Register = () => {
                       email: e.target.value,
                     });
                   }}
-                  className="border-0 border-bottom border-dark"
-                  style={{ outline: "none" }}
+                  className="form-control"
                 />
               </div>
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
@@ -228,12 +239,15 @@ const Register = () => {
                     });
                   }}
                   placeholder="User Password"
-                  className="border-0 border-bottom border-dark"
-                  style={{ outline: "none" }}
+                  className="form-control"
                 />
               </div>
               <div className="d-flex flex-column row-gap-2 justify-content-md-around align-items-center w-100">
-                <button className="btn btn-outline-dark" type="submit">
+                <button
+                  className="btn text-white w-100"
+                  style={{ background: "#6366F1" }}
+                  type="submit"
+                >
                   Register
                 </button>
                 <div className="d-sm-block d-md-none d-flex column-gap-2">
@@ -241,7 +255,7 @@ const Register = () => {
                     {newUser ? "Already Register ?" : "New User ?"}{" "}
                   </p>
                   <button
-                    className=" align-self-start rounded-3 bg-transparent border-0"
+                    className="btn btn-link text-primary"
                     onClick={(e) => {
                       e.preventDefault();
                       set_error(null);
@@ -262,11 +276,13 @@ const Register = () => {
               className="bg-transparent border border-3 p-3 h-100 w-100 d-flex flex-column justify-content-around align-items-center rounded-3 gap-3"
               onSubmit={(e) => SubmitloginForm(e)}
             >
-              <h5 className="d-md-none text-center">
+              <h5 className="d-md-none text-center fw-bold text-primary">
                 Ai Powered Task Management{" "}
               </h5>
-              <h3>Login Form</h3>
-              {login_error && <p>{login_error}</p>}
+              <h3 className="fw-bold text-center text-primary">Login Form</h3>
+              {login_error && (
+                <div className="alert alert-danger py-2">{login_error}</div>
+              )}
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
                 <label
                   htmlFor="login_email"
@@ -282,8 +298,7 @@ const Register = () => {
                   onChange={(e) => {
                     set_login_form({ ...login_form, email: e.target.value });
                   }}
-                  className="border-0 border-bottom border-dark"
-                  style={{ outline: "none" }}
+                  className="form-control"
                 />
               </div>
               <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
@@ -297,16 +312,22 @@ const Register = () => {
                   type="password"
                   id="login_password"
                   placeholder="User Password"
-                  className="border-0 border-bottom border-dark"
+                  className="form-control"
                   value={login_form.password}
                   onChange={(e) => {
                     set_login_form({ ...login_form, password: e.target.value });
                   }}
-                  style={{ outline: "none" }}
                 />
               </div>
               <div className="d-flex flex-column row-gap-2 justify-content-around align-items-center w-100">
-                <button className="btn btn-outline-dark">Login</button>
+                <button
+                  className="btn text-white w-100"
+                  style={{
+                    background: "#6366F1",
+                  }}
+                >
+                  Login
+                </button>
                 <div className="d-sm-block d-md-none d-flex column-gap-2 align-items-center justif-content-center">
                   <p className="mb-0">
                     {newUser ? "Already Register ?" : "New User ?"}{" "}

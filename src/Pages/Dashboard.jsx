@@ -120,16 +120,12 @@ const Dashboard = () => {
     e.preventDefault();
     if (add_task_validation(addTaskObject)) return;
     try {
-      let response = await api.post(
-        "/user/addtask",
-        addTaskObject,
-        {
-          headers: {
-            authorization: `Bearer ${usertoken}`,
-            "Content-Type": "Application/json",
-          },
+      let response = await api.post("/user/addtask", addTaskObject, {
+        headers: {
+          authorization: `Bearer ${usertoken}`,
+          "Content-Type": "Application/json",
         },
-      );
+      });
       if (response.status === 200) {
         console.log(response.data);
         task_fetcher();
@@ -149,94 +145,113 @@ const Dashboard = () => {
     }
   };
 
-  var deleteTaskById = async(taskid) => {
-      try {
-    let response = await api.delete(`/user/deletetask/${taskid}`,{
-      headers:{
-        authorization : `Bearer ${usertoken}`,
-        'Content-Type' : 'Application/json'
-      }
-    })
-      if(response.status === 200){
+  var deleteTaskById = async (taskid) => {
+    try {
+      let response = await api.delete(`/user/deletetask/${taskid}`, {
+        headers: {
+          authorization: `Bearer ${usertoken}`,
+          "Content-Type": "Application/json",
+        },
+      });
+      if (response.status === 200) {
         console.log(response.data);
         task_fetcher();
       }
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  };
 
-  var [task_update_formVisiblity, set_task_update_formVisiblity] = useState(false);
-  // this id is got from task list index values not original task id 
-  var [update_taskid , set_update_taskid] = useState(-1);
+  var [task_update_formVisiblity, set_task_update_formVisiblity] =
+    useState(false);
+  // this id is got from task list index values not original task id
+  var [update_taskid, set_update_taskid] = useState(-1);
   // so this task update act as our task update obj as well as the initial update object
-  var [task_update_form , set_task_update_form] = useState({});
+  var [task_update_form, set_task_update_form] = useState({});
   // so why we here used useeffect insteaded of using state ? the state has its initial value once and dont rerender or change it initial value
   // so it not change anything that's why when we do things it get worse.
-  var[objecToCheckUpdate , set_objectToCheckUpdate] = useState({});
-  useEffect(()=>{
-    var task = taskList.find((e)=> 
-       e.taskid == update_taskid 
-    )
+  var [objecToCheckUpdate, set_objectToCheckUpdate] = useState({});
+  useEffect(() => {
+    var task = taskList.find((e) => e.taskid == update_taskid);
     set_task_update_form(task ? task : {});
     set_objectToCheckUpdate(task ? task : {});
-  }, [update_taskid])
+  }, [update_taskid]);
 
   console.log(task_update_form);
 
-    function compareObjects(obj1 , obj2){
-      console.log(obj1);
-      console.log(obj2);
-      return obj1.title.includes(obj2.title) === true &&
-            obj1.description.includes(obj2.description) === true &&
-            obj1.status.includes(obj2.status) === true && 
-            obj1.priority.includes(obj2.priority) === true &&
-            obj1.dueDate.includes(obj2.dueDate) === true
-    }
-  function update_object_valid(){
-      return compareObjects(objecToCheckUpdate , task_update_form);
+  function compareObjects(obj1, obj2) {
+    console.log(obj1);
+    console.log(obj2);
+    return (
+      obj1.title.includes(obj2.title) === true &&
+      obj1.description.includes(obj2.description) === true &&
+      obj1.status.includes(obj2.status) === true &&
+      obj1.priority.includes(obj2.priority) === true &&
+      obj1.dueDate.includes(obj2.dueDate) === true
+    );
+  }
+  function update_object_valid() {
+    return compareObjects(objecToCheckUpdate, task_update_form);
   }
 
-  var update_form_submit = async()=>{
+  var update_form_submit = async () => {
     console.log("reached update request");
     console.log(update_object_valid());
-    if(update_object_valid()) {alert("No Changes Made."); return ;}
+    if (update_object_valid()) {
+      alert("No Changes Made.");
+      return;
+    }
     try {
       console.log(task_update_form);
       console.log("entered try");
-    let response = await api.patch(`/user/updatetask?taskid=${update_taskid}`,task_update_form,{
-      headers:{
-        authorization : `Bearer ${usertoken}`,
-        'Content-Type' : 'Application/json'
+      let response = await api.patch(
+        `/user/updatetask?taskid=${update_taskid}`,
+        task_update_form,
+        {
+          headers: {
+            authorization: `Bearer ${usertoken}`,
+            "Content-Type": "Application/json",
+          },
+        },
+      );
+      if (response.status === 200) {
+        alert(response.data);
+        task_fetcher();
       }
-    })
-    if(response.status === 200){
-      alert(response.data);
-      task_fetcher();
-    }
     } catch (error) {
       console.log(error);
-    }
-    finally{
+    } finally {
       set_task_update_form({});
       set_task_update_formVisiblity(false);
       set_update_taskid(-1);
     }
-  }
-  
+  };
+
   useEffect(() => {
     task_fetcher();
   }, []);
   return (
-    <div className="container-fluid py-4">
-      <div className="row  align-items-center border-bottom pb-3 ">
+    <div
+      className="container-fluid py-4"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg , #eef2ff 0%, #f5f3ff 100%)",
+      }}
+    >
+      <div className="row  align-items-center p-4 rounded-4 shadow-sm bg-white mb-4 ">
         <div className="col">
-          <h1 className="fw-bold">Welcome to dashboard</h1>
+          <>
+            <h2 className="fw-bold mb-1">👋 Welcome Back</h2>
+
+            <p className="text-muted mb-0">
+              Manage your tasks intelligently with AI
+            </p>
+          </>
         </div>
         <div className="col-auto">
           <button
-            className="btn btn-outline-dark"
+            className="btn text-white"
+            style={{ background: "#6366F1", border: "none" }}
             onClick={() => {
               localStorage.removeItem("ai_application_token");
               localStorage.removeItem("ai_application_role");
@@ -250,58 +265,64 @@ const Dashboard = () => {
 
       <div className="row mt-4">
         <div className="col">
-          <div className="border border-secondary rounded p-4">
-            <h3 className="mb-3 fw-bold">Ai Task Suggestion</h3>
-            <div className="row gap-3 justify-content-center">
-              <div className="col-md-8">
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  className="form-control border-dark"
-                  placeholder="Enter Task Title"
-                  value={suggestion.title}
-                  onChange={(e) =>
-                    set_suggestion({ ...suggestion, title: e.target.value })
-                  }
-                />
-              </div>
-              <div className="col-md-3">
-                <button
-                  className="btn btn-dark w-100"
-                  onClick={(e) => {
-                    initializeAirequest(e);
-                  }}
-                >
-                  Get Suggestion
-                </button>
-              </div>
-              {loading && (
-                <div className="col d-flex align-items-center">
-                  <span className={`${styles.roundone} ${styles.round}`}></span>
-                  <span className={`${styles.roundtwo} ${styles.round}`}></span>
+          <div className="card border-0 shadow-lg rounded-4">
+            <div className="card-body p-4">
+              <h3 className="fw-bold text-primary">Ai Task Suggestion</h3>
+              <div className="row gap-3 justify-content-center">
+                <div className="col-md-8">
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    className="form-control border-dark"
+                    placeholder="Enter Task Title"
+                    value={suggestion.title}
+                    onChange={(e) =>
+                      set_suggestion({ ...suggestion, title: e.target.value })
+                    }
+                  />
                 </div>
-              )}
-            </div>
-            {hideSuggesion === false && (
-              <div className="row mt-3 ">
-                <div className="col d-none d-md-flex flex-column justify-content-center ">
+                <div className="col-md-3">
                   <button
-                    className="align-self-end p-1 btn btn-outline-dark"
-                    title="Close Suggestion"
-                    onClick={() => {
-                      set_suggestion({
-                        title: "",
-                        description: "",
-                        priority: "",
-                        estimatedTime: "",
-                      });
-                      set_hideSuggestion(true);
+                    className="btn text-white w-100"
+                    onClick={(e) => {
+                      initializeAirequest(e);
                     }}
+                    style={{ background: "#6366F1" }}
                   >
-                    X
+                    Get Suggestion
                   </button>
-                  <table className="table">
+                </div>
+                {loading && (
+                  <div className="col d-flex align-items-center">
+                    <span
+                      className={`${styles.roundone} ${styles.round}`}
+                    ></span>
+                    <span
+                      className={`${styles.roundtwo} ${styles.round}`}
+                    ></span>
+                  </div>
+                )}
+              </div>
+              {hideSuggesion === false && (
+                <div className="row mt-3 ">
+                  <div className="col d-none d-md-flex flex-column justify-content-center ">
+                    <button
+                      className="align-self-end p-1 btn btn-outline-dark"
+                      title="Close Suggestion"
+                      onClick={() => {
+                        set_suggestion({
+                          title: "",
+                          description: "",
+                          priority: "",
+                          estimatedTime: "",
+                        });
+                        set_hideSuggestion(true);
+                      }}
+                    >
+                      X
+                    </button>
+                    {/* <table className="table">
                     <thead className="">
                       <tr>
                         <th>Title</th>
@@ -318,44 +339,67 @@ const Dashboard = () => {
                         <td>{suggestion.estimatedTime}</td>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
-                <div className="col d-block d-md-none">
-                  <div className="row">
-                    <div className="col-12">
-                      <p>Title :</p>
-                      <p>{suggestion.title}</p>
+                  </table> */}
+                    <div className="card shadow-sm border-0 mt-3">
+                      <div className="card-body">
+                        <h5 className="fw-bold">{suggestion.title}</h5>
+
+                        <p>{suggestion.description}</p>
+
+                        <div className="d-flex gap-2 flex-wrap">
+                          <span className="badge bg-danger">
+                            {suggestion.priority}
+                          </span>
+
+                          <span className="badge bg-primary">
+                            {suggestion.estimatedTime}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-12">
-                      <p>Description :</p>
-                      <p>{suggestion.description}</p>
+                  </div>
+                  {/* <div className="col d-block d-md-none">
+                    <div className="row">
+                      <div className="col-12">
+                        <p>Title :</p>
+                        <p>{suggestion.title}</p>
+                      </div>
+                      <div className="col-12">
+                        <p>Description :</p>
+                        <p>{suggestion.description}</p>
+                      </div>
+                      <div className="col-12">
+                        <p>Priority :</p>
+                        <p>{suggestion.priority}</p>
+                      </div>
+                      <div className="col-12">
+                        <p>Estimated Time :</p>
+                        <p>{suggestion.estimatedTime}</p>
+                      </div>
                     </div>
-                    <div className="col-12">
-                      <p>Priority :</p>
-                      <p>{suggestion.priority}</p>
-                    </div>
-                    <div className="col-12">
-                      <p>Estimated Time :</p>
-                      <p>{suggestion.estimatedTime}</p>
+                  </div> */}
+                  <div className="row ">
+                    <div className="col">
+                      <button
+                        className="btn btn-outline-dark"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          set_view_addtaskform(true);
+                          set_addTaskObject({
+                            ...addTaskObject,
+                            title: suggestion.title,
+                            description: suggestion.description,
+                            priority: suggestion.priority,
+                          });
+                        }}
+                      >
+                        Add this to Task
+                      </button>
                     </div>
                   </div>
                 </div>
-                <div className="row ">
-                  <div className="col">
-                    <button className="btn btn-outline-dark" onClick={(e)=>{
-                      e.preventDefault();
-                      set_view_addtaskform(true);
-                      set_addTaskObject({
-                        ...addTaskObject,
-                        title: suggestion.title,
-                        description : suggestion.description,
-                        priority : suggestion.priority
-                      })
-                    }}>Add this to Task</button>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -365,181 +409,265 @@ const Dashboard = () => {
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 className="fw-bold">Tasks Created</h2>
             <button
-              className="btn btn-dark"
+              className="btn text-white"
+              style={{ background: "#6366F1" }}
               onClick={() => set_view_addtaskform(!view_addtaskform)}
             >
-              {view_addtaskform ? "X" : "+ New Task"}
+              {view_addtaskform ? "X" : "+ Create Task"}
             </button>
           </div>
           {view_addtaskform && (
-            <div className="row p-4 m-0 border border-dark rounded-3 mb-3">
-              {addtask_error && (
-                <p className="text-danger fw-semibold">{addtask_error}</p>
-              )}
-              <form
-                onSubmit={(e) => addtaskformSubmission(e)}
-                className={`${styles.addTaskform} col d-flex flex-column flex-md-row gap-2 justify-content-around`}
-              >
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="add_task_title">Title</label>
-                  <input
-                    type="text"
-                    name=""
-                    id="add_task_title"
-                    placeholder="Task Title"
-                    value={addTaskObject.title}
-                    onChange={(e) =>
-                      set_addTaskObject({
-                        ...addTaskObject,
-                        title: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="add_task_description">Description</label>
-                  <textarea
-                    name=""
-                    id="add_task_description"
-                    style={{
-                      minHeight: "50px",
-                      maxHeight: "80px",
-                      scrollbarWidth: "none",
-                    }}
-                    placeholder="Task Description"
-                    value={addTaskObject.description}
-                    onChange={(e) => {
-                      set_addTaskObject({
-                        ...addTaskObject,
-                        description: e.target.value,
-                      });
-                    }}
-                  ></textarea>
-                </div>
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="add_task_priority">Priority</label>
-                  <select
-                    name=""
-                    id="add_task_priority"
-                    value={addTaskObject.priority}
-                    onChange={(e) => {
-                      set_addTaskObject({
-                        ...addTaskObject,
-                        priority: e.target.value,
-                      });
-                    }}
-                  >
-                    <option value="Default" defaultChecked>
-                      Select Priority
-                    </option>
-                    <option value="LOW">Low</option>
-                    <option value="HIGH">High</option>
-                  </select>
-                </div>
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="add_task_status">Status</label>
-                  <select
-                    name=""
-                    id="add_task_status"
-                    value={addTaskObject.status}
-                    onChange={(e) => {
-                      set_addTaskObject({
-                        ...addTaskObject,
-                        status: e.target.value,
-                      });
-                    }}
-                  >
-                    <option value="Default" defaultChecked>
-                      Select Status
-                    </option>
-                    <option value="TODO">Todo</option>
-                    <option value="IN_PROGRESS">In Process</option>
-                    <option value="DONE">Done</option>
-                  </select>
-                </div>
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <label htmlFor="add_task_duedate">Due Date</label>
-                  <input
-                    type="date"
-                    name=""
-                    id="add_task_duedate"
-                    value={addTaskObject.dueDate}
-                    onChange={(e) => {
-                      set_addTaskObject({
-                        ...addTaskObject,
-                        dueDate: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                  <button className="btn btn-outline-dark" type="submit">
-                    Add Task
-                  </button>
-                </div>
-              </form>
+            <div className="card border-0 shadow-sm rounded-4 mb-4">
+              <div className="card-body p-4">
+                {addtask_error && (
+                  <p className="text-danger fw-semibold">{addtask_error}</p>
+                )}
+                <form
+                  onSubmit={(e) => addtaskformSubmission(e)}
+                  className={`row g-3`}
+                >
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                    <label htmlFor="add_task_title">Title</label>
+                    <input
+                      type="text"
+                      name=""
+                      id="add_task_title"
+                      placeholder="Task Title"
+                      className="form-control"
+                      value={addTaskObject.title}
+                      onChange={(e) =>
+                        set_addTaskObject({
+                          ...addTaskObject,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                    <label htmlFor="add_task_description">Description</label>
+                    <textarea
+                      name=""
+                      id="add_task_description"
+                      className="form-control"
+                      style={{
+                        minHeight: "50px",
+                        maxHeight: "80px",
+                        scrollbarWidth: "none",
+                      }}
+                      placeholder="Task Description"
+                      value={addTaskObject.description}
+                      onChange={(e) => {
+                        set_addTaskObject({
+                          ...addTaskObject,
+                          description: e.target.value,
+                        });
+                      }}
+                    ></textarea>
+                  </div>
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                    <label htmlFor="add_task_priority">Priority</label>
+                    <select
+                      name=""
+                      id="add_task_priority"
+                      className="form-select"
+                      value={addTaskObject.priority}
+                      onChange={(e) => {
+                        set_addTaskObject({
+                          ...addTaskObject,
+                          priority: e.target.value,
+                        });
+                      }}
+                    >
+                      <option value="Default" defaultChecked>
+                        Select Priority
+                      </option>
+                      <option value="LOW">Low</option>
+                      <option value="HIGH">High</option>
+                    </select>
+                  </div>
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                    <label htmlFor="add_task_status">Status</label>
+                    <select
+                      name=""
+                      id="add_task_status"
+                      className="form-select"
+                      value={addTaskObject.status}
+                      onChange={(e) => {
+                        set_addTaskObject({
+                          ...addTaskObject,
+                          status: e.target.value,
+                        });
+                      }}
+                    >
+                      <option value="Default" defaultChecked>
+                        Select Status
+                      </option>
+                      <option value="TODO">Todo</option>
+                      <option value="IN_PROGRESS">In Process</option>
+                      <option value="DONE">Done</option>
+                    </select>
+                  </div>
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                    <label htmlFor="add_task_duedate">Due Date</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="add_task_duedate"
+                      value={addTaskObject.dueDate}
+                      onChange={(e) => {
+                        set_addTaskObject({
+                          ...addTaskObject,
+                          dueDate: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                    <button className="btn btn-outline-dark" type="submit">
+                      Add Task
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           )}
           {taskList.length > 0 ? (
-            <div className="table-responsive">
-              <table className=" table table-bordered border-dark text-center align-middle">
-                <thead className="table table-border border-dark">
-                  <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Created Date</th>
-                    <th>Due Date</th>
-                    <th>Update</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
+            <>
+              <div className="d-block d-md-none">
+                {taskList.map((task) => (
+                  <div
+                    key={task.taskid}
+                    className="card border-0 shadow-sm rounded-4 mb-3"
+                  >
+                    <div className="card-body">
+                      <div className="d-flex justify-content-between align-items-start">
+                        <h5 className="fw-bold mb-0">{task.title}</h5>
 
-                <tbody>
-                  {taskList.map((t, index) => (
-                    <tr key={index}>
-                      <td>{t.title}</td>
+                        <span
+                          className={`badge ${
+                            task.priority === "HIGH"
+                              ? "bg-danger"
+                              : "bg-success"
+                          }`}
+                        >
+                          {task.priority}
+                        </span>
+                      </div>
 
-                      <td>{t.description}</td>
+                      <hr />
 
-                      <td>{t.priority}</td>
+                      <p className="text-muted">{task.description}</p>
 
-                      <td>{t.status}</td>
+                      <div className="mb-2">
+                        <span
+                          className={`badge ${
+                            task.status === "DONE"
+                              ? "bg-success"
+                              : task.status === "IN_PROGRESS"
+                                ? "bg-primary"
+                                : "bg-secondary"
+                          }`}
+                        >
+                          {task.status}
+                        </span>
+                      </div>
 
-                      <td>{t.createdat}</td>
+                      <p>
+                        Due Date :<strong> {task.dueDate}</strong>
+                      </p>
 
-                      <td>{t.dueDate}</td>
-
-                      <td>
+                      <div className="d-flex gap-2">
                         <button
-                          className="btn btn-outline-dark btn-sm"
+                          className="btn btn-warning btn-sm"
                           onClick={(e) => {
                             e.preventDefault();
-                            set_update_taskid(t.taskid);
+                            set_update_taskid(task.taskid);
                             set_task_update_formVisiblity(true);
                           }}
                         >
                           Update
                         </button>
-                      </td>
 
-                      <td>
                         <button
-                          className="btn btn-dark btn-sm"
+                          className="btn btn-danger btn-sm"
                           onClick={(e) => {
                             e.preventDefault();
-                            deleteTaskById(t.taskid)
+                            deleteTaskById(task.taskid);
                           }}
                         >
                           Delete
                         </button>
-                      </td>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="table-responsive d-none d-md-block">
+                <table className="table table-hover align-middle">
+                  <thead className="table-primary">
+                    <tr>
+                      <th>Title</th>
+                      <th>Description</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Created Date</th>
+                      <th>Due Date</th>
+                      <th>Update</th>
+                      <th>Delete</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+
+                  <tbody>
+                    {taskList.map((t, index) => (
+                      <tr key={index}>
+                        <td>{t.title}</td>
+
+                        <td>{t.description}</td>
+
+                        <td><span className={`badge ${t.priority === "HIGH" ? 'bg-danger' : 'bg-success'}`}>
+                              {t.priority}
+                          </span></td>
+
+                        <td>
+                          <span className={`badge ${t.status  === "DONE" ? 'bg-success' : t.status === "IN_PROGRESS" ? 'bg-primary' : 'bg-secondary'}`}>
+                            {t.status}
+                          </span>
+                        </td>
+
+                        <td>{t.createdat}</td>
+
+                        <td>{t.dueDate}</td>
+
+                        <td>
+                          <button
+                            className="btn btn-outline-dark btn-sm"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              set_update_taskid(t.taskid);
+                              set_task_update_formVisiblity(true);
+                            }}
+                          >
+                            Update
+                          </button>
+                        </td>
+
+                        <td>
+                          <button
+                            className="btn btn-dark btn-sm"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              deleteTaskById(t.taskid);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           ) : (
             <div className="border border-dark rounded p-5 text-center">
               <h3>No Tasks Created</h3>
@@ -560,7 +688,13 @@ const Dashboard = () => {
           }}
         >
           <div className="row rounded-3 bg-white shadow-lg ">
-            <form className="col d-flex flex-column gap-3 justify-content-around p-3" onSubmit={(e)=>  { e.preventDefault(); update_form_submit();} }>
+            <form
+              className="col d-flex flex-column gap-3 justify-content-around p-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                update_form_submit();
+              }}
+            >
               <div>
                 <button
                   className="btn btn-outline-dark"
@@ -580,11 +714,11 @@ const Dashboard = () => {
                   id="update_task_title"
                   placeholder="Task Title"
                   value={task_update_form.title}
-                  onChange={(e)=>{
+                  onChange={(e) => {
                     set_task_update_form({
                       ...task_update_form,
-                      title : e.target.value
-                    })
+                      title: e.target.value,
+                    });
                   }}
                 />
               </div>
@@ -595,24 +729,26 @@ const Dashboard = () => {
                   id="update_task_description"
                   placeholder="Task Description"
                   value={task_update_form.description}
-                  style={{scrollbarWidth:"none" , maxHeight:"80px"}}
-                  onChange={(e)=>{
+                  style={{ scrollbarWidth: "none", maxHeight: "80px" }}
+                  onChange={(e) => {
                     set_task_update_form({
                       ...task_update_form,
-                      description : e.target.value
-                    })
+                      description: e.target.value,
+                    });
                   }}
                 ></textarea>
               </div>
 
               <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
                 <label htmlFor="update_task_priority">Priority</label>
-                <select id="update_task_priority" value={task_update_form.priority} 
-                  onChange={(e)=>{
+                <select
+                  id="update_task_priority"
+                  value={task_update_form.priority}
+                  onChange={(e) => {
                     set_task_update_form({
                       ...task_update_form,
-                      priority : e.target.value
-                    })
+                      priority: e.target.value,
+                    });
                   }}
                 >
                   <option value="Default">Select Priority</option>
@@ -623,12 +759,14 @@ const Dashboard = () => {
 
               <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
                 <label htmlFor="update_task_status">Status</label>
-                <select id="update_task_status" value={task_update_form.status} 
-                  onChange={(e)=>{
+                <select
+                  id="update_task_status"
+                  value={task_update_form.status}
+                  onChange={(e) => {
                     set_task_update_form({
                       ...task_update_form,
-                      status : e.target.value
-                    })
+                      status: e.target.value,
+                    });
                   }}
                 >
                   <option value="Default">Select Status</option>
@@ -640,18 +778,21 @@ const Dashboard = () => {
 
               <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
                 <label htmlFor="update_task_due_date">Due Date</label>
-                <input type="date" id="update_task_due_date" value={task_update_form.dueDate} 
-                  onChange={(e)=>{
+                <input
+                  type="date"
+                  id="update_task_due_date"
+                  value={task_update_form.dueDate}
+                  onChange={(e) => {
                     set_task_update_form({
                       ...task_update_form,
-                      dueDate : e.target.value
-                    })
+                      dueDate: e.target.value,
+                    });
                   }}
                 />
               </div>
 
               <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
-                <button className="btn btn-outline-dark" type="submit" >
+                <button className="btn btn-outline-dark" type="submit">
                   Update Task
                 </button>
               </div>
