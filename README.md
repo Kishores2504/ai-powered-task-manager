@@ -170,6 +170,10 @@ Gemini AI API
 
 (Add Screenshot Here)
 
+### Added Task
+
+![Register Page](screenshots/adddTask.png)
+
 ### AI Suggestion
 
 (Add Screenshot Here)
