@@ -161,31 +161,31 @@ Gemini AI API
 
 ### Login Page
 
-! [Login Page](screenshots/loginpage.png)
+![Login Page](screenshots/loginpage.png)
 
 ### Register Page
 
-! [Register Page](screenshots/registerpage.png)
+![Register Page](screenshots/registerpage.png)
 
 ### Dashboard
 
-! [Dashboard Page](screenshots/dashboardpage.png)
+![Dashboard Page](screenshots/dashboardpage.png)
 
 ### Added Task
 
-! [AddTask Page](screenshots/adddTask.png)
+![AddTask Page](screenshots/adddTask.png)
 
 ### AI Suggestion
 
-! [Ai Suggestion Output](screenshots/aiSuggestionOutput.png)
+![Ai Suggestion Output](screenshots/aiSuggestionOutput.png)
 
 ### Task Management
 
-! [Added Task Page](screenshots/addedTask.png)
+![Added Task Page](screenshots/addedTask.png)
 
 ### Update Task
 
-! [Update Task Form](screenshots/updateTaskForm.png)
+![Update Task Form](screenshots/updateTaskForm.png)
 
 ---
 
