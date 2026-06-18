@@ -123,13 +123,13 @@ const Register = () => {
 
   return (
     <div
-      className="container-fluid mt-4"
+      className="container-fluid "
       style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg , #6366F1 ,#8B5CF6)",
       }}
     >
-      <div className="row m-0 justify-content-center align-items-center h-100">
+      <div className="row m-0 justify-content-center align-items-center h-100 mt-5 pt-5">
         <div className="col-lg-6 d-none d-md-block">
           <h4 className="text-white">Welcome to</h4>
           <h1 className="display-3 fw-bold text-white">

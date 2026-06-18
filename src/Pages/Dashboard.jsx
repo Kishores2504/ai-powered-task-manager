@@ -232,7 +232,7 @@ const Dashboard = () => {
   }, []);
   return (
     <div
-      className="container-fluid py-4 mt-4"
+      className="container-fluid py-4"
       style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg , #eef2ff 0%, #f5f3ff 100%)",
