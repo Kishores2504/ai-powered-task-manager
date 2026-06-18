@@ -48,7 +48,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsconfig() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOrigins(List.of("http://localhost:5173","https://ai-powered-task-manager-one.vercel.app"));
-		config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+		config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource urlconfig = new UrlBasedCorsConfigurationSource();
