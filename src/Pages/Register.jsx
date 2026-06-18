@@ -122,32 +122,129 @@ const Register = () => {
   }
 
   return (
-    <div
-      className="container-fluid "
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg , #6366F1 ,#8B5CF6)",
-      }}
-    >
-      <div className="row m-0 justify-content-center align-items-center h-100 mt-5 pt-5">
-        <div className="col-lg-6 d-none d-md-block">
-          <h4 className="text-white">Welcome to</h4>
-          <h1 className="display-3 fw-bold text-white">
-            Ai Powered <br /> Task Management
-          </h1>
-          <p className="text-white fs-5 mt-3">
-            Organize Tasks.
-            <br />
-            Prioritize Work.
-            <br />
-            Let AI Assist You.
-          </p>
-          <div className="mt-3 d-flex flex-column ">
-            <h4 className=" text-secondary-emphasis">
-              {newUser ? "Already Register ?" : "New User ?"}
-            </h4>
+<div
+  className="container-fluid d-flex align-items-center justify-content-center min-vh-100"
+  style={{
+    background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+    padding: "2rem 1rem",
+  }}
+>
+  <div 
+    className="row justify-content-center align-items-center w-100 g-0 m-0" 
+    style={{ maxWidth: "1050px" }}
+  >
+   
+    <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-center text-white pe-lg-5 animate__animated animate__fadeInLeft">
+      <span 
+        className="badge align-self-start mb-3 px-3 py-2 text-uppercase fw-semibold"
+        style={{ background: "rgba(255, 255, 255, 0.15)", backdropFilter: "blur(4px)", letterSpacing: "1px" }}
+      >
+        Next-Gen Productivity
+      </span>
+      <h1 className="display-4 fw-extrabold tracking-tight mb-3" style={{ lineHeight: "1.1" }}>
+        AI-Powered <br />
+        <span style={{ color: "#a78bfa" }}>Task Management</span>
+      </h1>
+      <p className="fs-5 opacity-85 mb-4 fw-light" style={{ maxWidth: "440px" }}>
+        Streamline your workflow, prioritize what truly matters, and unleash intelligence directly into your daily schedule.
+      </p>
+      <div className="d-flex flex-column mt-2">
+        <span className="opacity-75 mb-2 small fw-medium">
+          {newUser ? "Already have an account?" : "New to our platform?"}
+        </span>
+        <button
+          className="btn btn-outline-light align-self-start px-4 py-2 rounded-pill fw-medium transition-all"
+          style={{ borderWidth: "1.5px" }}
+          onClick={(e) => {
+            e.preventDefault();
+            set_error(null);
+            set_login_error(null);
+            set_register_form({ name: "", email: "", password: "" });
+            set_login_form({ email: "", password: "" });
+            set_newUser((prev) => !prev);
+          }}
+        >
+          {newUser ? "Sign In" : "Create Account"}
+        </button>
+      </div>
+    </div>
+
+    
+    <div className="col-lg-5 col-md-8 col-sm-11 ms-auto animate__animated animate__fadeInRight">
+      {newUser ? (
+        <form
+          action="post"
+          className="p-4 p-md-5 d-flex flex-column gap-3 rounded-4 shadow-2xl border text-white"
+          style={{ 
+            background: "rgba(255, 255, 255, 0.07)", 
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            borderColor: "rgba(255, 255, 255, 0.12)"
+          }}
+          onSubmit={(e) => SubmitregisterForm(e)}
+        >
+          <div className="text-center mb-2">
+            <h5 className="d-lg-none text-uppercase tracking-wider opacity-70 small mb-2">AI Task Manager</h5>
+            <h2 className="fw-bold tracking-tight">Create Account</h2>
+            <p className="small opacity-75">Get started with your free workspace today</p>
+          </div>
+
+          {error && (
+            <div className="alert alert-danger py-2 px-3 small border-0 shadow-sm d-flex align-items-center" style={{ background: "rgba(239, 68, 68, 0.2)", color: "#fca5a5" }}>
+              <i className="bi bi-exclamation-triangle-fill me-2"></i> {error}
+            </div>
+          )}
+
+          <div className="form-group d-flex flex-column gap-1">
+            <label htmlFor="registerusername" className="small fw-medium opacity-80">Username</label>
+            <input
+              type="text"
+              id="registerusername"
+              placeholder="e.g., john_doe"
+              value={register_form.name}
+              onChange={(e) => set_register_form({ ...register_form, name: e.target.value })}
+              className="form-control text-white border-0 py-2.5 px-3 rounded-3"
+              style={{ background: "rgba(255, 255, 255, 0.08)" }}
+            />
+          </div>
+
+          <div className="form-group d-flex flex-column gap-1">
+            <label htmlFor="useremail" className="small fw-medium opacity-80">Email Address</label>
+            <input
+              type="text"
+              id="useremail"
+              placeholder="name@example.com"
+              value={register_form.email}
+              onChange={(e) => set_register_form({ ...register_form, email: e.target.value })}
+              className="form-control text-white border-0 py-2.5 px-3 rounded-3"
+              style={{ background: "rgba(255, 255, 255, 0.08)" }}
+            />
+          </div>
+
+          <div className="form-group d-flex flex-column gap-1">
+            <label htmlFor="userpassword" className="small fw-medium opacity-80">Password</label>
+            <input
+              type="password"
+              id="userpassword"
+              placeholder="••••••••"
+              value={register_form.password}
+              onChange={(e) => set_register_form({ ...register_form, password: e.target.value })}
+              className="form-control text-white border-0 py-2.5 px-3 rounded-3"
+              style={{ background: "rgba(255, 255, 255, 0.08)" }}
+            />
+          </div>
+
+          <button
+            className="btn btn-light w-100 py-2.5 mt-3 rounded-3 fw-semibold shadow-sm transition-all text-indigo-700 hover-lift"
+            style={{ color: "#4f46e5" }}
+            type="submit"
+          >
+            Register Base
+          </button>
+          <div className="d-lg-none d-flex align-items-center justify-content-center gap-1 mt-2 small opacity-90">
+            <span>Already registered?</span>
             <button
-              className="btn btn-light mt-3 px-4"
+              className="btn btn-link p-0 text-white fw-semibold text-decoration-none border-bottom border-white border-1"
               onClick={(e) => {
                 e.preventDefault();
                 set_error(null);
@@ -157,201 +254,88 @@ const Register = () => {
                 set_newUser((prev) => !prev);
               }}
             >
-              {newUser ? "Login" : "Register"}
+              Sign In
             </button>
           </div>
-        </div>
-        <div className="col-lg-4 col-md-6 col-sm-12">
-          {newUser ? (
-            <form
-              action="post"
-              className="bg-white shadow-lg border-0 p-4 w-100 rounded-4 d-flex flex-column gap-4"
-              onSubmit={(e) => SubmitregisterForm(e)}
-            >
-              <h5 className="d-md-none text-center">
-                Ai Powered Task Management{" "}
-              </h5>
-              <div>
-                <h3 className="fw-bold text-center text-primary">
-                  Create Account
-                </h3>
-                {error && (
-                  <div className="alert alert-danger py-2">{error}</div>
-                )}
-              </div>
-              <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2  w-100">
-                <label
-                  htmlFor="registerusername"
-                  className="fs-5 fw-semibold text-secondary"
-                >
-                  User Name :
-                </label>
-                <input
-                  type="text"
-                  id="registerusername"
-                  placeholder="User Name"
-                  value={register_form.name}
-                  onChange={(e) => {
-                    set_register_form({
-                      ...register_form,
-                      name: e.target.value,
-                    });
-                  }}
-                  className="form-control"
-                />
-              </div>
-              <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
-                <label
-                  htmlFor="useremail"
-                  className="fs-5 fw-semibold text-secondary"
-                >
-                  User Email :
-                </label>
-                <input
-                  type="text"
-                  id="useremail"
-                  placeholder="User Email"
-                  value={register_form.email}
-                  onChange={(e) => {
-                    set_register_form({
-                      ...register_form,
-                      email: e.target.value,
-                    });
-                  }}
-                  className="form-control"
-                />
-              </div>
-              <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
-                <label
-                  htmlFor="userpassword"
-                  className="fs-5 fw-semibold text-secondary"
-                >
-                  User Password :
-                </label>
-                <input
-                  type="password"
-                  id="userpassword"
-                  value={register_form.password}
-                  onChange={(e) => {
-                    set_register_form({
-                      ...register_form,
-                      password: e.target.value,
-                    });
-                  }}
-                  placeholder="User Password"
-                  className="form-control"
-                />
-              </div>
-              <div className="d-flex flex-column row-gap-2 justify-content-md-around align-items-center w-100">
-                <button
-                  className="btn text-white w-100"
-                  style={{ background: "#6366F1" }}
-                  type="submit"
-                >
-                  Register
-                </button>
-                <div className="d-sm-block d-md-none d-flex column-gap-2">
-                  <p className="mb-0 ">
-                    {newUser ? "Already Register ?" : "New User ?"}{" "}
-                  </p>
-                  <button
-                    className="btn btn-link text-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      set_error(null);
-                      set_login_error(null);
-                      set_register_form({ name: "", email: "", password: "" });
-                      set_login_form({ email: "", password: "" });
-                      set_newUser((prev) => !prev);
-                    }}
-                  >
-                    {newUser ? "Login" : "Register"}
-                  </button>
-                </div>
-              </div>
-            </form>
-          ) : (
-            <form
-              action="post"
-              className="bg-transparent border border-3 p-3 h-100 w-100 d-flex flex-column justify-content-around align-items-center rounded-3 gap-3"
-              onSubmit={(e) => SubmitloginForm(e)}
-            >
-              <h5 className="d-md-none text-center fw-bold text-primary">
-                Ai Powered Task Management{" "}
-              </h5>
-              <h3 className="fw-bold text-center text-primary">Login Form</h3>
-              {login_error && (
-                <div className="alert alert-danger py-2">{login_error}</div>
-              )}
-              <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
-                <label
-                  htmlFor="login_email"
-                  className="fs-5 fw-semibold text-secondary"
-                >
-                  User Email :
-                </label>
-                <input
-                  type="text"
-                  id="login_email"
-                  placeholder="User Email"
-                  value={login_form.email}
-                  onChange={(e) => {
-                    set_login_form({ ...login_form, email: e.target.value });
-                  }}
-                  className="form-control"
-                />
-              </div>
-              <div className="d-flex flex-column flex-md-row justify-content-around row-gap-2 w-100">
-                <label
-                  htmlFor="login_password"
-                  className="fs-5 fw-semibold text-secondary"
-                >
-                  User Password :
-                </label>
-                <input
-                  type="password"
-                  id="login_password"
-                  placeholder="User Password"
-                  className="form-control"
-                  value={login_form.password}
-                  onChange={(e) => {
-                    set_login_form({ ...login_form, password: e.target.value });
-                  }}
-                />
-              </div>
-              <div className="d-flex flex-column row-gap-2 justify-content-around align-items-center w-100">
-                <button
-                  className="btn text-white w-100"
-                  style={{
-                    background: "#6366F1",
-                  }}
-                >
-                  Login
-                </button>
-                <div className="d-sm-block d-md-none d-flex column-gap-2 align-items-center justif-content-center">
-                  <p className="mb-0">
-                    {newUser ? "Already Register ?" : "New User ?"}{" "}
-                  </p>
-                  <button
-                    className=" align-self-start rounded-3 bg-transparent border-0"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      set_error(null);
-                      set_login_error(null);
-                      set_register_form({ name: "", email: "", password: "" });
-                      set_login_form({ email: "", password: "" });
-                      set_newUser((prev) => !prev);
-                    }}
-                  >
-                    {newUser ? "Login" : "Register"}
-                  </button>
-                </div>
-              </div>
-            </form>
+        </form>
+      ) : (
+        <form
+          action="post"
+          className="p-4 p-md-5 d-flex flex-column gap-3 rounded-4 shadow-2xl border text-white"
+          style={{ 
+            background: "rgba(255, 255, 255, 0.07)", 
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            borderColor: "rgba(255, 255, 255, 0.12)"
+          }}
+          onSubmit={(e) => SubmitloginForm(e)}
+        >
+          <div className="text-center mb-2">
+            <h5 className="d-lg-none text-uppercase tracking-wider opacity-70 small mb-2">AI Task Manager</h5>
+            <h2 className="fw-bold tracking-tight">Welcome Back</h2>
+            <p className="small opacity-75">Sign in to access your synchronized workspace</p>
+          </div>
+
+          {login_error && (
+            <div className="alert alert-danger py-2 px-3 small border-0 shadow-sm d-flex align-items-center" style={{ background: "rgba(239, 68, 68, 0.2)", color: "#fca5a5" }}>
+              <i className="bi bi-exclamation-triangle-fill me-2"></i> {login_error}
+            </div>
           )}
-        </div>
-      </div>
+
+          <div className="form-group d-flex flex-column gap-1">
+            <label htmlFor="login_email" className="small fw-medium opacity-80">Email Address</label>
+            <input
+              type="text"
+              id="login_email"
+              placeholder="name@example.com"
+              value={login_form.email}
+              onChange={(e) => set_login_form({ ...login_form, email: e.target.value })}
+              className="form-control text-white border-0 py-2.5 px-3 rounded-3"
+              style={{ background: "rgba(255, 255, 255, 0.08)" }}
+            />
+          </div>
+
+          <div className="form-group d-flex flex-column gap-1">
+            <label htmlFor="login_password" className="small fw-medium opacity-80">Password</label>
+            <input
+              type="password"
+              id="login_password"
+              placeholder="••••••••"
+              value={login_form.password}
+              onChange={(e) => set_login_form({ ...login_form, password: e.target.value })}
+              className="form-control text-white border-0 py-2.5 px-3 rounded-3"
+              style={{ background: "rgba(255, 255, 255, 0.08)" }}
+            />
+          </div>
+
+          <button
+            className="btn btn-light w-100 py-2.5 mt-3 rounded-3 fw-semibold shadow-sm transition-all text-indigo-700 hover-lift"
+            style={{ color: "#4f46e5" }}
+            type="submit"
+          >
+            Sign In
+          </button>
+          <div className="d-lg-none d-flex align-items-center justify-content-center gap-1 mt-2 small opacity-90">
+            <span>New user?</span>
+            <button
+              className="btn btn-link p-0 text-white fw-semibold text-decoration-none border-bottom border-white border-1"
+              onClick={(e) => {
+                e.preventDefault();
+                set_error(null);
+                set_login_error(null);
+                set_register_form({ name: "", email: "", password: "" });
+                set_login_form({ email: "", password: "" });
+                set_newUser((prev) => !prev);
+              }}
+            >
+              Create Account
+            </button>
+          </div>
+        </form>
+      )}
     </div>
+  </div>
+</div>
   );
 };
 
