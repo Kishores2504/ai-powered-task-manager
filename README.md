@@ -161,7 +161,7 @@ Gemini AI API
 
 ### Login Page
 
-![Login Page](screenshots/loginpage.png)
+![Login Page](screenshots/loginpage.jpeg)
 
 ### Register Page
 
@@ -173,7 +173,7 @@ Gemini AI API
 
 ### Added Task
 
-![AddTask Page](screenshots/adddTask.png)
+![AddTask Page](screenshots/addedTask.png)
 
 ### AI Suggestion
 
