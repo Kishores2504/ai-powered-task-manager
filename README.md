@@ -185,6 +185,7 @@ Gemini AI API
 
 ### Update Task
 
+! [Update Task Form](screenshots/updateTaskForm.png)
 
 ---
 
