@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -70,6 +71,10 @@ public class UserService {
 		Optional<UserEntity> isuser = user_repo.findByuser_email(logindto.email());
 		if (isuser.isEmpty()) {
 			throw new UserNotFoundException("User Not Found Register");
+		}
+		UserEntity user = isuser.get();
+		if(!encoder.matches(logindto.password(), user.getUser_password())) {
+			return  ResponseEntity.status(HttpStatus.CONFLICT).body("Password is Incorrect");
 		}
 		Authentication auth = authmanager
 				.authenticate(new UsernamePasswordAuthenticationToken(logindto.email(), logindto.password()));
