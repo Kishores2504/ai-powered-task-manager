@@ -88,6 +88,8 @@ public class GeminiService {
 			return extractTaskSuggestion(rawresponse);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
 			return """
 					{
 					"description" : "Gemini Unavailable",
